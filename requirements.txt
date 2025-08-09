@@ -1,0 +1,16 @@
+# Core
+pandas
+numpy
+matplotlib
+scipy
+statsmodels
+
+# Data download
+yfinance
+
+# Utils
+pyyaml
+
+# Notebooks (optionnel)
+jupyter
+ipykernel
