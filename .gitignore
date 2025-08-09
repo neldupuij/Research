@@ -1,16 +1,30 @@
+# macOS
 .DS_Store
+
+# Python
 .venv/
 __pycache__/
 .ipynb_checkpoints/
 .env
+
+# R / renv
 .Rhistory
 .RData
 .Rproj.user/
 renv/library/
 renv/staging/
+.Renviron
+
+# Données & sorties (générées)
 data/raw/*
-data/processed/*.rds
+data/processed/*.csv
 data/processed/*.parquet
-figures/*
+data/processed/*.rds
 reports/exports/*
+figures/*
 logs/*
+
+# Ne PAS ignorer :
+# - renv.lock (versionné)
+# - Makefile, README.md, config/
+# - scripts/, src/, docs/
