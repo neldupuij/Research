@@ -1,0 +1,7 @@
+project: "Volatility Spillovers — EU Financials"
+tickers: ["BNP.PA","SAN.MC","DBK.DE"]
+start_date: "2015-01-01"
+end_date: null
+returns: "log"
+rolling_window: 200
+forecast_horizon: 10

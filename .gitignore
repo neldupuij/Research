@@ -1,0 +1,16 @@
+.DS_Store
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.env
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+renv/staging/
+data/raw/*
+data/processed/*.rds
+data/processed/*.parquet
+figures/*
+reports/exports/*
+logs/*
