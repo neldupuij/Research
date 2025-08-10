@@ -1,3 +1,5 @@
+[![CI](https://github.com/neldupuij/Research/actions/workflows/ci.yml/badge.svg)](https://github.com/neldupuij/Research/actions/workflows/ci.yml)
+
 # Volatility Spillovers — EU Financial Institutions
 
 ## Lancer
