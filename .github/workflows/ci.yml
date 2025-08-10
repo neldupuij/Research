@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements-lock.txt
+            requirements.txt
+      - name: Install Python deps (if any)
+        run: |
+          if [ -f requirements-lock.txt ]; then pip install -r requirements-lock.txt;
+          elif [ -f requirements.txt ]; then pip install -r requirements.txt;
+          else echo "No Python requirements file found"; fi
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Restore R packages with renv
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Smoke test (doctor)
+        run: Rscript scripts/00_doctor.R
