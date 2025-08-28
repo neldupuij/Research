@@ -446,38 +446,6 @@
       "Repository": "CRAN",
       "NeedsCompilation": "no"
     },
-    "Spillover": {
-      "Package": "Spillover",
-      "Version": "0.1.1",
-      "Source": "Repository",
-      "Type": "Package",
-      "Title": "Spillover/Connectedness Index Based on VAR Modelling",
-      "Date": "2024-03-12",
-      "Author": "Jilber Urbina",
-      "Maintainer": "Jilber Urbina <JilberUrbina@gmail.com>",
-      "Description": "A user-friendly tool for estimating both total and directional connectedness spillovers based on Diebold and Yilmaz (2009, 2012). It also provides the user with rolling estimation for total and net indices. User can find both orthogonalized and generalized versions for each kind of measures. See Diebold and Yilmaz (2009, 2012) find them at  <doi:10.1111/j.1468-0297.2008.02208.x> and <doi:10.1016/j.ijforecast.2011.02.006>.",
-      "License": "GPL-2",
-      "Depends": [
-        "R (>= 3.5.0)",
-        "vars"
-      ],
-      "Imports": [
-        "dplyr",
-        "ggplot2",
-        "fastSOM",
-        "tidyr",
-        "zoo"
-      ],
-      "Encoding": "UTF-8",
-      "RoxygenNote": "7.2.3",
-      "Suggests": [
-        "rmarkdown",
-        "knitr"
-      ],
-      "VignetteBuilder": "knitr",
-      "NeedsCompilation": "no",
-      "Repository": "CRAN"
-    },
     "TTR": {
       "Package": "TTR",
       "Version": "0.24.4",
@@ -1687,24 +1655,6 @@
       "NeedsCompilation": "yes",
       "Author": "Thomas Lin Pedersen [cre, aut] (<https://orcid.org/0000-0002-5147-4711>), Berendea Nicolae [aut] (Author of the ColorSpace C++ library), Romain François [aut] (<https://orcid.org/0000-0002-2444-4226>), Posit, PBC [cph, fnd]",
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
-      "Repository": "CRAN"
-    },
-    "fastSOM": {
-      "Package": "fastSOM",
-      "Version": "1.0.1",
-      "Source": "Repository",
-      "Type": "Package",
-      "Date": "2019-11-19",
-      "Title": "Fast Calculation of Spillover Measures",
-      "Authors@R": "c(person(\"Stefan\",\"Kloessner\", role = c(\"aut\",\"cre\"), email = \"S.Kloessner@mx.uni-saarland.de\"), person(\"Sven\",\"Wagner\", role = c(\"aut\"), email = \"sven.wagner78@googlemail.com\"))",
-      "Imports": [
-        "parallel"
-      ],
-      "Description": "Functions for computing spillover measures, especially spillover tables and spillover indices, as well as their average, minimal, and maximal values.",
-      "License": "GPL (>= 2)",
-      "NeedsCompilation": "yes",
-      "Author": "Stefan Kloessner [aut, cre], Sven Wagner [aut]",
-      "Maintainer": "Stefan Kloessner <S.Kloessner@mx.uni-saarland.de>",
       "Repository": "CRAN"
     },
     "fastmap": {

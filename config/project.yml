@@ -1,7 +1,83 @@
-project: "Volatility Spillovers — EU Financials"
-tickers: ["BNP.PA","SAN.MC","DBK.DE"]
+project: "Volatility Spillovers — European Banks (30+)"
+tickers:
+  # France
+  - BNP.PA      # BNP Paribas
+  - ACA.PA      # Crédit Agricole
+  - GLE.PA      # Société Générale
+
+  # Germany
+  - DBK.DE      # Deutsche Bank
+  - CBK.DE      # Commerzbank
+
+  # Spain
+  - SAN.MC      # Santander
+  - BBVA.MC     # BBVA
+  - CABK.MC     # CaixaBank
+  - BKT.MC      # Bankinter
+  - SAB.MC      # Banco Sabadell
+
+  # Italy
+  - ISP.MI      # Intesa Sanpaolo
+  - UCG.MI      # UniCredit
+  - BAMI.MI     # Banco BPM
+  - BMPS.MI     # Banca Monte dei Paschi
+  - MB.MI       # Mediobanca
+
+  # Netherlands
+  - INGA.AS     # ING Group
+  - ABN.AS      # ABN AMRO
+
+  # Belgium
+  - KBC.BR      # KBC Group
+
+  # Austria
+  - EBS.VI      # Erste Group
+  - RBI.VI      # Raiffeisen Bank International
+
+  # United Kingdom
+  - BARC.L      # Barclays
+  - LLOY.L      # Lloyds Banking Group
+  - HSBA.L      # HSBC
+  - STAN.L      # Standard Chartered
+  - NWG.L       # NatWest Group
+
+  # Switzerland
+  - UBSG.SW     # UBS Group
+  - BAER.SW     # Julius Baer
+
+  # Nordics
+  - NDA-SE.ST   # Nordea
+  - SWED-A.ST   # Swedbank A
+  - SHB-A.ST    # Handelsbanken A
+  - SEB-A.ST    # SEB A
+  - DANSKE.CO   # Danske Bank
+  - DNB.OL      # DNB ASA
+
+  # Portugal
+  - BCP.LS      # Millennium bcp
+
+  # Poland
+  - PKO.WA      # PKO Bank Polski
+  - PEO.WA      # Bank Pekao
+
+  # Greece
+  - ALPHA.AT    # Alpha Bank
+  - ETE.AT      # National Bank of Greece
+  - TPEIR.AT    # Piraeus Bank
+  - EUROB.AT    # Eurobank
+
 start_date: "2015-01-01"
 end_date: null
 returns: "log"
+
+# Modèle & calculs
+forecast_horizon: 10     # H (jours de bourse) pour la GFEVD
+var_max_lag: 5           # p maximum pour sélection BIC
+
+# (option) rolling si tu l’actives plus tard
 rolling_window: 200
-forecast_horizon: 10
+
+# Filtres qualité (pour gérer M&A / trous de données)
+min_coverage_ratio: 0.90
+min_history_years: 5
+drop_reason_log: "logs/exclusions.csv"
