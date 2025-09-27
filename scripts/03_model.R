@@ -1,10 +1,8 @@
 #!/usr/bin/env Rscript
-# scripts/03_model.R
 suppressPackageStartupMessages({
-  library(tidyverse)
+  library(yaml)
 })
-source("src/R/utils_config.R")
 source("src/R/step_model.R")
 
-cfg <- read_config()
-step_model(cfg)
+cfg <- yaml::read_yaml("config/project.yml")
+invisible(step_model(cfg))

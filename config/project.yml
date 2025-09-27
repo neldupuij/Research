@@ -1,83 +1,112 @@
 project: "Volatility Spillovers — European Banks (30+)"
+
 tickers:
-  # France
-  - BNP.PA      # BNP Paribas
-  - ACA.PA      # Crédit Agricole
-  - GLE.PA      # Société Générale
-
-  # Germany
-  - DBK.DE      # Deutsche Bank
-  - CBK.DE      # Commerzbank
-
-  # Spain
-  - SAN.MC      # Santander
-  - BBVA.MC     # BBVA
-  - CABK.MC     # CaixaBank
-  - BKT.MC      # Bankinter
-  - SAB.MC      # Banco Sabadell
-
-  # Italy
-  - ISP.MI      # Intesa Sanpaolo
-  - UCG.MI      # UniCredit
-  - BAMI.MI     # Banco BPM
-  - BMPS.MI     # Banca Monte dei Paschi
-  - MB.MI       # Mediobanca
-
-  # Netherlands
-  - INGA.AS     # ING Group
-  - ABN.AS      # ABN AMRO
-
-  # Belgium
-  - KBC.BR      # KBC Group
-
-  # Austria
-  - EBS.VI      # Erste Group
-  - RBI.VI      # Raiffeisen Bank International
-
-  # United Kingdom
-  - BARC.L      # Barclays
-  - LLOY.L      # Lloyds Banking Group
-  - HSBA.L      # HSBC
-  - STAN.L      # Standard Chartered
-  - NWG.L       # NatWest Group
-
-  # Switzerland
-  - UBSG.SW     # UBS Group
-  - BAER.SW     # Julius Baer
-
-  # Nordics
-  - NDA-SE.ST   # Nordea
-  - SWED-A.ST   # Swedbank A
-  - SHB-A.ST    # Handelsbanken A
-  - SEB-A.ST    # SEB A
-  - DANSKE.CO   # Danske Bank
-  - DNB.OL      # DNB ASA
-
-  # Portugal
-  - BCP.LS      # Millennium bcp
-
-  # Poland
-  - PKO.WA      # PKO Bank Polski
-  - PEO.WA      # Bank Pekao
-
-  # Greece
-  - ALPHA.AT    # Alpha Bank
-  - ETE.AT      # National Bank of Greece
-  - TPEIR.AT    # Piraeus Bank
-  - EUROB.AT    # Eurobank
+  - BNP.PA  # BNP Paribas
+  - ACA.PA  # Crédit Agricole
+  - GLE.PA  # Société Générale
+  - DBK.DE  # Deutsche Bank
+  - CBK.DE  # Commerzbank
+  - PBB.DE  # Deutsche Pfandbriefbank
+  - SAN.MC  # Banco Santander
+  - BBVA.MC  # BBVA
+  - CABK.MC  # CaixaBank
+  - BKT.MC  # Bankinter
+  - SAB.MC  # Banco Sabadell
+  - UNI.MC  # Unicaja Banco
+  - ISP.MI  # Intesa Sanpaolo
+  - UCG.MI  # UniCredit
+  - BAMI.MI  # Banco BPM
+  - BMPS.MI  # Banca Monte dei Paschi di Siena
+  - MB.MI  # Mediobanca
+  - BPE.MI  # BPER Banca
+  - FBK.MI  # FinecoBank
+  - BPSO.MI  # Banca Popolare di Sondrio
+  - BMED.MI  # Banca Mediolanum
+  - INGA.AS  # ING Groep
+  - ABN.AS  # ABN AMRO
+  - VLK.AS  # Van Lanschot Kempen
+  - TRIO.AS  # Triodos Bank
+  - KBC.BR  # KBC Group
+  - EBS.VI  # Erste Group Bank
+  - RBI.VI  # Raiffeisen Bank International
+  - BG.VI  # BAWAG Group
+  - ADKO.VI  # Addiko Bank
+  - BARC.L  # Barclays
+  - LLOY.L  # Lloyds Banking Group
+  - HSBA.L  # HSBC Holdings
+  - STAN.L  # Standard Chartered
+  - NWG.L  # NatWest Group
+  - VMUK.L  # Virgin Money UK
+  - OSB.L  # OSB Group
+  - CBG.L  # Close Brothers Group
+  - INVP.L  # Investec plc
+  - STB.L  # Secure Trust Bank
+  - MTRO.L  # Metro Bank
+  - UBSG.SW  # UBS Group
+  - BAER.SW  # Julius Baer
+  - EFGN.SW  # EFG International
+  - VONN.SW  # Vontobel Holding
+  - CMBN.SW  # Cembra Money Bank
+  - BCVN.SW  # Banque Cantonale Vaudoise
+  - BCGE.SW  # Banque Cantonale de Genève
+  - NDA-SE.ST  # Nordea
+  - SWED-A.ST  # Swedbank A
+  - SHB-A.ST  # Handelsbanken A
+  - SEB-A.ST  # SEB A
+  - DANSKE.CO  # Danske Bank
+  - JYSK.CO  # Jyske Bank
+  - SYDB.CO  # Sydbank
+  - DNB.OL  # DNB ASA
+  - MING.OL  # SpareBank 1 SMN
+  - NONG.OL  # SpareBank 1 Nord-Norge
+  - SVEG.OL  # Sparebanken Vest
+  - BCP.LS  # Millennium bcp
+  - PKO.WA  # PKO Bank Polski
+  - PEO.WA  # Bank Pekao
+  - MBK.WA  # mBank
+  - ING.WA  # ING Bank Śląski
+  - ALR.WA  # Alior Bank
+  - MIL.WA  # Bank Millennium
+  - SPL.WA  # Santander Bank Polska
+  - KOMB.PR  # Komerční banka
+  - MONET.PR  # Moneta Money Bank
+  - A5G.IR  # AIB Group
+  - BIRG.IR  # Bank of Ireland
+  - PTSB.IR  # Permanent TSB
+  - ALPHA.AT  # Alpha Bank
+  - ETE.AT  # National Bank of Greece
+  - TPEIR.AT  # Piraeus Bank
+  - EUROB.AT  # Eurobank
+  - TLV.RO  # Banca Transilvania
+  - BRD.RO  # BRD - Groupe Société Générale
+  - BOV.MT  # Bank of Valletta
+  - ARION.IC  # Arion Bank
+  - ISB.IC  # Íslandsbanki
 
 start_date: "2015-01-01"
 end_date: null
 returns: "log"
 
-# Modèle & calculs
-forecast_horizon: 10     # H (jours de bourse) pour la GFEVD
-var_max_lag: 5           # p maximum pour sélection BIC
+# ----------------------------
+# VAR & FEVD settings
+# ----------------------------
+forecast_horizon: 10         # H (trading days) for generalized FEVD
+select_p_mode: "fixed"
+var_max_lag: 1
+p_fixed: 1
 
-# (option) rolling si tu l’actives plus tard
-rolling_window: 200
+# ----------------------------
+# Rolling window (optional)
+# ----------------------------
+rolling_window: 250          # W (trading days)
+rolling_step: 20             # step between windows
+rolling_max_windows: null    # null = no cap; set a number to limit (e.g., 50)
+log_every: 5                 # progress log frequency (in windows)
 
-# Filtres qualité (pour gérer M&A / trous de données)
-min_coverage_ratio: 0.90
-min_history_years: 5
-drop_reason_log: "logs/exclusions.csv"
+# ----------------------------
+# Data quality filters
+# ----------------------------
+min_history_years: 5         # require at least this many years of history
+min_coverage_pct: 90         # minimum % “trading-day coverage” over the span
+min_last_date: "2024-01-01"  # drop symbols that don't trade after this date
+
