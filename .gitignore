@@ -28,3 +28,7 @@ logs/*
 # - renv.lock (versionné)
 # - Makefile, README.md, config/
 # - scripts/, src/, docs/
+
+# legacy renderers (removed)
+scripts/04_render.R
+scripts/run_pipeline.R
