@@ -1,31 +1,49 @@
+# Detect binaries
 RSC := $(shell command -v Rscript 2>/dev/null || echo Rscript)
+PY  := $(shell command -v python3 2>/dev/null || echo python3)
 
-.PHONY: bootstrap run clean lock restore doctor py-restore r-restore
+.PHONY: bootstrap run r-run plot-py clean lock restore doctor py-restore r-restore
 
-bootstrap:  ## installe deps à partir des fichiers non figés
-	python3 -m venv .venv
+## ---------------------------------------------------------------------------
+## Setup
+## ---------------------------------------------------------------------------
+
+bootstrap:  ## create venv + install Python/R deps (unlocked)
+	$(PY) -m venv .venv
 	. .venv/bin/activate && pip install -r requirements.txt
 	$(RSC) scripts/install_r_requirements.R
 
-run:  ## exécute la pipeline complète
+## ---------------------------------------------------------------------------
+## Pipeline
+## ---------------------------------------------------------------------------
+
+run: r-run plot-py  ## full pipeline: R exports CSVs, Python makes figures
+
+r-run:  ## R steps only (no plotting)
 	$(RSC) scripts/01_download.R
 	$(RSC) scripts/02_process.R
 	$(RSC) scripts/03_model.R
-	$(RSC) scripts/04_render.R
 
-clean: ## supprime outputs
+plot-py:  ## build all figures with Python from reports/exports/*.csv
+	$(PY) -m src.python.plot_connectedness
+
+## ---------------------------------------------------------------------------
+## Housekeeping
+## ---------------------------------------------------------------------------
+
+clean: ## remove all derived data/figures
 	rm -f data/processed/prices_raw.csv data/processed/returns_panel.csv
-	rm -f reports/exports/total_connectedness.csv reports/exports/net_spillovers.csv reports/exports/spillover_table.csv reports/exports/spillover_matrix_kxk.csv reports/exports/spillover_static_result.rds
-	rm -f figures/total_connectedness.png figures/net_spillovers.png
+	rm -f reports/exports/*.csv reports/exports/*.rds
+	rm -f figures/*.png figures/*.pdf
 
-lock: ## met à jour requirements-lock.txt et renv.lock
+lock: ## update Python & R lock files
 	. .venv/bin/activate && pip freeze > requirements-lock.txt
 	$(RSC) -e 'renv::snapshot()'
 
-restore: py-restore r-restore  ## restaure à partir des fichiers figés
+restore: py-restore r-restore  ## restore from lock files
 
 py-restore:
-	python3 -m venv .venv
+	$(PY) -m venv .venv
 	. .venv/bin/activate && pip install -r requirements-lock.txt
 
 r-restore:
