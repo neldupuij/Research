@@ -1,53 +1,22 @@
-# Detect binaries
-RSC := $(shell command -v Rscript 2>/dev/null || echo Rscript)
-PY  := $(shell command -v python3 2>/dev/null || echo python3)
+SHELL := cmd
+.SHELLFLAGS := /C
 
-.PHONY: bootstrap run r-run plot-py clean lock restore doctor py-restore r-restore
+RSC := Rscript
+PY  := .venv\Scripts\python.exe
 
-## ---------------------------------------------------------------------------
-## Setup
-## ---------------------------------------------------------------------------
+.PHONY: run r-run plot-py restore
 
-bootstrap:  ## create venv + install Python/R deps (unlocked)
-	$(PY) -m venv .venv
-	. .venv/bin/activate && pip install -r requirements.txt
-	$(RSC) scripts/install_r_requirements.R
+run: r-run plot-py
 
-## ---------------------------------------------------------------------------
-## Pipeline
-## ---------------------------------------------------------------------------
+r-run:
+	$(RSC) scripts\01_download.R
+	$(RSC) scripts\02_process.R
+	$(RSC) scripts\03_model.R
 
-run: r-run plot-py  ## full pipeline: R exports CSVs, Python makes figures
+plot-py:
+	"$(PY)" src\python\plot_connectedness.py
 
-r-run:  ## R steps only (no plotting)
-	$(RSC) scripts/01_download.R
-	$(RSC) scripts/02_process.R
-	$(RSC) scripts/03_model.R
-
-plot-py:  ## build all figures with Python from reports/exports/*.csv
-	$(PY) -m src.python.plot_connectedness
-
-## ---------------------------------------------------------------------------
-## Housekeeping
-## ---------------------------------------------------------------------------
-
-clean: ## remove all derived data/figures
-	rm -f data/processed/prices_raw.csv data/processed/returns_panel.csv
-	rm -f reports/exports/*.csv reports/exports/*.rds
-	rm -f figures/*.png figures/*.pdf
-
-lock: ## update Python & R lock files
-	. .venv/bin/activate && pip freeze > requirements-lock.txt
-	$(RSC) -e 'renv::snapshot()'
-
-restore: py-restore r-restore  ## restore from lock files
-
-py-restore:
-	$(PY) -m venv .venv
-	. .venv/bin/activate && pip install -r requirements-lock.txt
-
-r-restore:
-	$(RSC) -e 'if (!requireNamespace("renv", quietly=TRUE)) install.packages("renv", repos="https://cloud.r-project.org"); renv::consent(provided=TRUE); renv::restore()'
-
-doctor:
-	$(RSC) scripts/00_doctor.R
+restore:
+	py -3.12 -m venv .venv
+	"$(PY)" -m pip install -r requirements-lock.txt
+	$(RSC) -e "if(!requireNamespace('renv', quietly=TRUE)) install.packages('renv', repos='https://cloud.r-project.org'); renv::restore()"
