@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+﻿#!/usr/bin/env Rscript
 # scripts/01_download.R
 suppressPackageStartupMessages({
   library(tidyverse)

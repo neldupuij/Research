@@ -1,4 +1,4 @@
-# src/R/step_download.R
+﻿# src/R/step_download.R
 suppressPackageStartupMessages({
   library(tidyverse)
   library(lubridate)
@@ -7,12 +7,12 @@ suppressPackageStartupMessages({
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-# Étape Download : Yahoo Adj Close -> data/processed/prices_raw.csv
+# Ã‰tape Download : Yahoo Adj Close -> data/processed/prices_raw.csv
 step_download <- function(cfg) {
   t0 <- Sys.time()
   message(format(t0, "%Y-%m-%d %H:%M:%S"), " - Download: ", paste(cfg$tickers, collapse = ", "))
 
-  # Appel direct tq_get sur le vecteur de tickers (gère une grande liste)
+  # Appel direct tq_get sur le vecteur de tickers (gÃ¨re une grande liste)
   prices <- tq_get(cfg$tickers,
                    get  = "stock.prices",
                    from = cfg$start_date %||% "1900-01-01",

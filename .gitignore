@@ -1,34 +1,22 @@
-# macOS
-.DS_Store
-
-# Python
+﻿# Python / R environments
 .venv/
-__pycache__/
-.ipynb_checkpoints/
-.env
-
-# R / renv
-.Rhistory
-.RData
 .Rproj.user/
+.Rhistory
 renv/library/
-renv/staging/
-.Renviron
 
-# Données & sorties (générées)
-data/raw/*
-data/processed/*.csv
-data/processed/*.parquet
-data/processed/*.rds
-reports/exports/*
-figures/*
-logs/*
+# Data
+data/raw/
+data/cache/
 
-# Ne PAS ignorer :
-# - renv.lock (versionné)
-# - Makefile, README.md, config/
-# - scripts/, src/, docs/
+# Outputs and figures
+outputs/
+figures/
 
-# legacy renderers (removed)
-scripts/04_render.R
-scripts/run_pipeline.R
+# Archives & temporary reports
+archive/
+project_tree*.txt
+
+# OS / IDE
+*.Rproj
+.DS_Store
+Thumbs.db
