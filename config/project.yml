@@ -1,112 +1,101 @@
-project: "Volatility Spillovers — European Banks (30+)"
-
-tickers:
-  - BNP.PA  # BNP Paribas
-  - ACA.PA  # Crédit Agricole
-  - GLE.PA  # Société Générale
-  - DBK.DE  # Deutsche Bank
-  - CBK.DE  # Commerzbank
-  - PBB.DE  # Deutsche Pfandbriefbank
-  - SAN.MC  # Banco Santander
-  - BBVA.MC  # BBVA
-  - CABK.MC  # CaixaBank
-  - BKT.MC  # Bankinter
-  - SAB.MC  # Banco Sabadell
-  - UNI.MC  # Unicaja Banco
-  - ISP.MI  # Intesa Sanpaolo
-  - UCG.MI  # UniCredit
-  - BAMI.MI  # Banco BPM
-  - BMPS.MI  # Banca Monte dei Paschi di Siena
-  - MB.MI  # Mediobanca
-  - BPE.MI  # BPER Banca
-  - FBK.MI  # FinecoBank
-  - BPSO.MI  # Banca Popolare di Sondrio
-  - BMED.MI  # Banca Mediolanum
-  - INGA.AS  # ING Groep
-  - ABN.AS  # ABN AMRO
-  - VLK.AS  # Van Lanschot Kempen
-  - TRIO.AS  # Triodos Bank
-  - KBC.BR  # KBC Group
-  - EBS.VI  # Erste Group Bank
-  - RBI.VI  # Raiffeisen Bank International
-  - BG.VI  # BAWAG Group
-  - ADKO.VI  # Addiko Bank
-  - BARC.L  # Barclays
-  - LLOY.L  # Lloyds Banking Group
-  - HSBA.L  # HSBC Holdings
-  - STAN.L  # Standard Chartered
-  - NWG.L  # NatWest Group
-  - VMUK.L  # Virgin Money UK
-  - OSB.L  # OSB Group
-  - CBG.L  # Close Brothers Group
-  - INVP.L  # Investec plc
-  - STB.L  # Secure Trust Bank
-  - MTRO.L  # Metro Bank
-  - UBSG.SW  # UBS Group
-  - BAER.SW  # Julius Baer
-  - EFGN.SW  # EFG International
-  - VONN.SW  # Vontobel Holding
-  - CMBN.SW  # Cembra Money Bank
-  - BCVN.SW  # Banque Cantonale Vaudoise
-  - BCGE.SW  # Banque Cantonale de Genève
-  - NDA-SE.ST  # Nordea
-  - SWED-A.ST  # Swedbank A
-  - SHB-A.ST  # Handelsbanken A
-  - SEB-A.ST  # SEB A
-  - DANSKE.CO  # Danske Bank
-  - JYSK.CO  # Jyske Bank
-  - SYDB.CO  # Sydbank
-  - DNB.OL  # DNB ASA
-  - MING.OL  # SpareBank 1 SMN
-  - NONG.OL  # SpareBank 1 Nord-Norge
-  - SVEG.OL  # Sparebanken Vest
-  - BCP.LS  # Millennium bcp
-  - PKO.WA  # PKO Bank Polski
-  - PEO.WA  # Bank Pekao
-  - MBK.WA  # mBank
-  - ING.WA  # ING Bank Śląski
-  - ALR.WA  # Alior Bank
-  - MIL.WA  # Bank Millennium
-  - SPL.WA  # Santander Bank Polska
-  - KOMB.PR  # Komerční banka
-  - MONET.PR  # Moneta Money Bank
-  - A5G.IR  # AIB Group
-  - BIRG.IR  # Bank of Ireland
-  - PTSB.IR  # Permanent TSB
-  - ALPHA.AT  # Alpha Bank
-  - ETE.AT  # National Bank of Greece
-  - TPEIR.AT  # Piraeus Bank
-  - EUROB.AT  # Eurobank
-  - TLV.RO  # Banca Transilvania
-  - BRD.RO  # BRD - Groupe Société Générale
-  - BOV.MT  # Bank of Valletta
-  - ARION.IC  # Arion Bank
-  - ISB.IC  # Íslandsbanki
-
+project: "Volatility Spillovers - European Banks (30+)"
 start_date: "2015-01-01"
 end_date: null
 returns: "log"
 
-# ----------------------------
-# VAR & FEVD settings
-# ----------------------------
-forecast_horizon: 10         # H (trading days) for generalized FEVD
+forecast_horizon: 20
 select_p_mode: "fixed"
-var_max_lag: 1
+var_max_lag: 5
 p_fixed: 1
 
-# ----------------------------
-# Rolling window (optional)
-# ----------------------------
-rolling_window: 250          # W (trading days)
-rolling_step: 20             # step between windows
-rolling_max_windows: null    # null = no cap; set a number to limit (e.g., 50)
-log_every: 5                 # progress log frequency (in windows)
+rolling_window: 100
+rolling_step: 22
+rolling_max_windows: null
+log_every: 5
 
-# ----------------------------
-# Data quality filters
-# ----------------------------
-min_history_years: 5         # require at least this many years of history
-min_coverage_pct: 90         # minimum % “trading-day coverage” over the span
-min_last_date: "2024-01-01"  # drop symbols that don't trade after this date
+min_history_years: 5
+min_coverage_pct: 90
+min_last_date: "2024-01-01"
 
+tickers:
+  - BNP.PA
+  - ACA.PA
+  - GLE.PA
+  - DBK.DE
+  - CBK.DE
+  - PBB.DE
+  - SAN.MC
+  - BBVA.MC
+  - CABK.MC
+  - BKT.MC
+  - SAB.MC
+  - UNI.MC
+  - ISP.MI
+  - UCG.MI
+  - BAMI.MI
+  - BMPS.MI
+  - MB.MI
+  - BPE.MI
+  - FBK.MI
+  - BPSO.MI
+  - BMED.MI
+  - INGA.AS
+  - ABN.AS
+  - VLK.AS
+  - TRIO.AS
+  - KBC.BR
+  - EBS.VI
+  - RBI.VI
+  - BG.VI
+  - ADKO.VI
+  - BARC.L
+  - LLOY.L
+  - HSBA.L
+  - STAN.L
+  - NWG.L
+  - VMUK.L
+  - OSB.L
+  - CBG.L
+  - INVP.L
+  - STB.L
+  - MTRO.L
+  - UBSG.SW
+  - BAER.SW
+  - EFGN.SW
+  - VONN.SW
+  - CMBN.SW
+  - BCVN.SW
+  - BCGE.SW
+  - NDA-SE.ST
+  - SWED-A.ST
+  - SHB-A.ST
+  - SEB-A.ST
+  - DANSKE.CO
+  - JYSK.CO
+  - SYDB.CO
+  - DNB.OL
+  - MING.OL
+  - NONG.OL
+  - SVEG.OL
+  - BCP.LS
+  - PKO.WA
+  - PEO.WA
+  - MBK.WA
+  - ING.WA
+  - ALR.WA
+  - MIL.WA
+  - SPL.WA
+  - KOMB.PR
+  - MONET.PR
+  - A5G.IR
+  - BIRG.IR
+  - PTSB.IR
+  - ALPHA.AT
+  - ETE.AT
+  - TPEIR.AT
+  - EUROB.AT
+  - TLV.RO
+  - BRD.RO
+  - BOV.MT
+  - ARION.IC
+  - ISB.IC

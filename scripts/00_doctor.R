@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript
+﻿#!/usr/bin/env Rscript
 
 ok <- TRUE
 
@@ -30,7 +30,7 @@ if (!file.exists("src/python/plot_connectedness.py")) {
 }
 
 if (ok) {
-  message("✅ Doctor: structure OK (R CSV exports + Python plots).")
+  message("âœ… Doctor: structure OK (R CSV exports + Python plots).")
 } else {
   quit(status = 1)
 }
