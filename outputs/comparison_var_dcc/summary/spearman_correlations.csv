@@ -1,0 +1,3 @@
+comparison,n,spearman_rho,p_value,significant_5pct
+MST degree vs VAR net spillover,63,0.5319,0.0,True
+DCC eigen centrality vs VAR net spillover,63,0.9699,0.0,True

@@ -1,0 +1,371 @@
+==============================================================
+  SPEAKER NOTES — Volatility Spillovers Among European Financial Institutions
+  Target: ~18–19 minutes  |  22 slides
+==============================================================
+
+──────────────────────────────────────────────────────────────
+SLIDE 1 — Title  [~30s]
+──────────────────────────────────────────────────────────────
+Good [morning/afternoon] everyone. Today I will present our work on volatility
+spillovers and connectedness across major European financial institutions.
+We combine three complementary approaches — VAR-based connectedness, DCC-GARCH,
+and correlation-network methods — to study how risk propagates across banks,
+insurers, and diversified financials in Europe.
+
+──────────────────────────────────────────────────────────────
+SLIDE 2 — Motivation  [~1min 30s]
+──────────────────────────────────────────────────────────────
+Why does this matter? Over the past decades, financial integration has created
+denser networks through which local shocks can quickly become systemic events.
+The GFC, the European sovereign debt crisis, and COVID-19 are vivid reminders
+of this. In Europe specifically, the sovereign-bank nexus means that sovereign
+stress can weaken domestic banks and spill over internationally through
+cross-border linkages.
+
+This creates a complicated problem. For policymakers: is a troubled institution
+"Too Big to Fail", "Too Many to Fail", or "Too Interconnected to Fail"?
+For investors: are there real diversification opportunities during systemic stress?
+
+To answer these questions, we need directional, ordering-invariant measures of
+connectedness — measures that can capture regime-dependent dynamics from the
+individual bank level all the way up to the country level.
+
+Our three main questions are: How dense and state-dependent is connectedness?
+Which institutions act as persistent transmitters or receivers? And do our three
+methodologies deliver consistent systemic risk signals?
+
+──────────────────────────────────────────────────────────────
+SLIDE 3 — Literature  [~1min]
+──────────────────────────────────────────────────────────────
+The paper sits at the intersection of three strands of literature.
+
+First, the VAR-DY connectedness framework, starting from Diebold and Yilmaz
+(2009, 2012), which uses generalized forecast error variance decompositions to
+extract directed spillover networks. A very recent extension by Buchwalter,
+Diebold and Yilmaz (2025) introduces clustered identification — we benchmark
+our results against this line of work.
+
+Second, multivariate GARCH models — and in particular the DCC model of Engle
+(2002), which is tractable even in large systems and delivers time-varying
+correlations we can compare directly with our VAR-based connectedness.
+
+Third, correlation networks and MSTs, following Mantegna (1999), which offer a
+model-free view of market topology and clustering.
+
+The key gap: no prior study jointly applies the full DY framework to European
+financial institutions while benchmarking DCC and comparing with MST networks
+across the full institutional cross-section.
+
+──────────────────────────────────────────────────────────────
+SLIDE 4 — Data  [~1min]
+──────────────────────────────────────────────────────────────
+Our dataset covers 63 European financial institutions — banks, insurers, and
+diversified financials — from 18 countries, over the period 2010 to 2026.
+
+Daily prices come from Yahoo Finance. We construct Friday-to-Friday weekly
+log-returns and standardize each series by its full-sample mean and standard
+deviation. This standardization removes level differences and allows us to focus
+on second-moment dynamics.
+
+Institutions are included if they have data from January 2010, at most 20%
+missing weekly observations, no prolonged suspensions, and if their country has
+at least 3 surviving institutions. The result is a balanced panel of 682 weekly
+observations per series.
+
+──────────────────────────────────────────────────────────────
+SLIDE 5a — Methodology: VAR-DY  [~1min 30s]
+──────────────────────────────────────────────────────────────
+Our main methodology is the Diebold-Yilmaz framework. The workflow is:
+standardized returns → rolling VAR(p) → VMA(∞) → generalized FEVD →
+connectedness measures.
+
+The key object is the generalized FEVD entry θ̃ᵍᵢⱼ(H), which measures the share
+of the H-step-ahead forecast error variance of institution i that is attributable
+to shocks from institution j. Because we use the generalized identification of
+Koop, Pesaran and Shin, these shares are invariant to variable ordering.
+
+From these we construct three measures:
+— The Total Connectedness Index (TCI): the average off-diagonal share, summarizing
+  system-wide interconnectedness.
+— Directional FROM and TO: how much each institution receives from, or transmits
+  to, the rest of the system.
+— Net spillover: TO minus FROM — positive means net transmitter, negative means
+  net receiver.
+
+Our baseline uses p=1, a rolling window of 156 weeks (≈3 years), a step of 4
+weeks, and a forecast horizon H=10 weeks.
+
+──────────────────────────────────────────────────────────────
+SLIDE 5b — Methodology: VAR-DY (cont.)  [~30s]
+──────────────────────────────────────────────────────────────
+For robustness, we vary the VAR order (p=1 vs p=2), the window length
+(W = 104, 156, or 208 weeks), and the forecast horizon (H = 4 to 12 weeks).
+All key results survive these variations — I will return to this at the end.
+
+──────────────────────────────────────────────────────────────
+SLIDE 6 — Benchmarks: DCC-GARCH & MST  [~1min]
+──────────────────────────────────────────────────────────────
+We benchmark the VAR-DY results against two model-free approaches.
+
+For DCC-GARCH: we first fit a univariate GARCH(1,1) to each series, then model
+the dynamic correlations via the DCC updating equation of Engle (2002). This
+gives us a time-varying correlation matrix Rₜ at each point. In each rolling
+window, we compare the mean absolute DCC correlation with the VAR-DY TCI.
+
+For the MST: we build a correlation-based distance matrix using the Mantegna
+transformation dᵢⱼ = √(2(1−ρ̂ᵢⱼ)), then extract the minimum spanning tree —
+the minimal connected subgraph spanning all 63 nodes. The MST provides a
+model-free backbone of the strongest pairwise dependencies in the system.
+
+──────────────────────────────────────────────────────────────
+SLIDE 7a — Results: TCI Dynamics  [~1min 30s]
+──────────────────────────────────────────────────────────────
+Let's move to the results. The first and perhaps most striking finding is how
+high system-wide connectedness is — and how it evolves.
+
+The TCI remains in the upper 80s even in tranquil periods. This means that at
+any point in time, roughly 85–90% of each institution's forecast error variance
+is driven by shocks from other institutions — not by idiosyncratic factors.
+The system is already tightly integrated before any crisis hits.
+
+When COVID-19 arrives in early 2020, the TCI spikes sharply to around 95%,
+compressing idiosyncratic components almost entirely.
+
+But the most important observation is what happens after: TCI does not return to
+its pre-2019 level. It stabilizes structurally above the pre-COVID norm.
+This is not just a temporary shock — it is a lasting structural shift in the
+topology of the European financial network.
+
+──────────────────────────────────────────────────────────────
+SLIDE 7b — Results: Frequency Decomposition  [~1min]
+──────────────────────────────────────────────────────────────
+To understand the nature of this structural shift, we decompose the TCI across
+frequency bands following Baruník and Křehlík (2018).
+
+In calm periods, short-run spillovers — cycles of 2 to 4 weeks — dominate.
+These reflect transient market co-movement and sentiment contagion.
+
+During and after COVID, the long-run band — cycles exceeding 8 weeks — expands
+from roughly 25% to 45% of total TCI, and stays elevated. This tells us the
+post-COVID ratcheting of connectedness is driven by structural deepening of
+financial integration, not just transient panic.
+
+At the institutional level, UBS is the dominant long-run structural transmitter,
+yet it does not appear in the top-5 short-run emitters. This frequency
+heterogeneity is invisible if you only look at aggregate TCI.
+
+──────────────────────────────────────────────────────────────
+SLIDE 8 — Results: FROM & TO Rankings  [~1min]
+──────────────────────────────────────────────────────────────
+While the TCI tells us about the system as a whole, the directional measures
+reveal the heterogeneous roles of individual institutions.
+
+Looking at the FROM rankings — the top receivers of spillovers — we consistently
+find large cross-border banks: BNP Paribas, Société Générale, ING Group,
+Santander, and UBS.
+
+Looking at the TO rankings — the top transmitters — we find a somewhat different
+set: Société Générale, Bankinter, Raiffeisen, Skandinaviska Enskilda Banken,
+and KBC Group.
+
+The key message: even in a highly connected system, individual roles differ
+substantially. Some institutions primarily absorb shocks, others primarily
+generate them — and a few do both.
+
+──────────────────────────────────────────────────────────────
+SLIDE 9 — Results: Net Spillovers  [~1min]
+──────────────────────────────────────────────────────────────
+The net spillover picture is equally instructive. A positive net value means the
+institution transmits more volatility than it receives — a net emitter.
+
+We find that banks from peripheral or smaller markets tend to be persistent net
+transmitters: their volatility propagates outward to the rest of the system.
+Large Western European banks tend to be structural net receivers: they absorb
+more volatility than they emit.
+
+And crucially, several large cross-border institutions play a dual role —
+appearing simultaneously among the top receivers and top emitters. They act
+as both amplifiers and targets of systemic volatility.
+
+The macroprudential implication is direct: systemic risk is not simply a function
+of size. Peripheral net transmitters deserve closer supervisory attention, and the
+dual-role institutions complicate any simple "Too Big to Fail" narrative.
+
+──────────────────────────────────────────────────────────────
+SLIDE 10 — Results: DCC Dynamics  [~45s]
+──────────────────────────────────────────────────────────────
+Turning to the DCC-GARCH benchmark: the mean absolute correlation across all
+institution pairs — what we call ρ̄ₜ — confirms the picture from the VAR-DY TCI.
+
+In calm periods, ρ̄ₜ is around 0.30–0.35. This is not zero: European financial
+equities are structurally co-dependent even in tranquil times.
+During COVID, ρ̄ₜ jumps above 0.50 and stays elevated — closely matching
+the timing of the VAR-DY TCI surge.
+
+The same stable core of institutions emerges as DCC hubs: BNP Paribas, Société
+Générale, ING, Intesa Sanpaolo, KBC, Santander, and UBS.
+
+──────────────────────────────────────────────────────────────
+SLIDE 11 — Results: DY vs DCC  [~45s]
+──────────────────────────────────────────────────────────────
+How closely do the two approaches track each other? Very closely.
+
+The Pearson correlation between rolling TCI and mean DCC is r = 0.94, with
+R² = 0.88. The OLS line fits the time series almost perfectly. Both methods
+spike simultaneously during COVID and remain elevated together.
+
+One additional finding: DCC leads TCI by approximately one rolling window.
+This means the fast-moving covariance structure contains early-warning
+information about upcoming shifts in variance-decomposition connectedness.
+
+──────────────────────────────────────────────────────────────
+SLIDE 11b — Results: Connectedness Regimes  [~1min]
+──────────────────────────────────────────────────────────────
+To go beyond descriptive analysis of the TCI, we apply k-means clustering
+directly to the rolling GFEVD feature vectors — with no pre-labelling of
+crisis episodes.
+
+For each of the 132 rolling windows, we compute a 5-dimensional feature vector
+capturing: TCI, cross-sectional dispersion and skewness of net spillovers,
+the maximum net transmitter, and top-5 concentration.
+
+The silhouette criterion selects K=2 regimes. A calm regime: TCI around 88%,
+high dispersion, positive skew — one dominant transmitter is identifiable.
+And a crisis regime: TCI around 94%, lower dispersion, negative skew.
+
+The key insight is that during crises, the network homogenizes. Shocks spread
+more uniformly — there is no single dominant transmitter driving the system.
+This structural feature of the crisis regime is completely invisible to
+aggregate TCI analysis alone, and has direct implications for stress-test design.
+
+──────────────────────────────────────────────────────────────
+SLIDE 12 — Results: Cross-Method Centrality  [~45s]
+──────────────────────────────────────────────────────────────
+A natural question is whether the systemic risk rankings are robust across
+methods. The answer is a strong yes.
+
+On a comparable strength basis, the Spearman rank correlation between VAR-DY
+time-averaged TO strength and simple correlation-network strength is ρ = 0.97,
+statistically significant across all 63 institutions. For the MST weighted
+degree, it is ρ = 0.70.
+
+This near-perfect alignment means that even a model-free, computationally simple
+correlation ranking recovers the same hierarchy of systemic importance as the
+more sophisticated GFEVD framework. Our risk hub identification is robust.
+
+──────────────────────────────────────────────────────────────
+SLIDES 12b, 12c, 12d — Networks Across Regimes  [~1min total]
+──────────────────────────────────────────────────────────────
+These three slides show the VAR-DY, correlation, and MST networks side by side
+across the three sub-periods: calm, crisis, and post-crisis.
+
+In all three methods, the pattern is consistent: the network densifies sharply
+during the crisis period, hub degrees increase, and the dominance of single
+transmitters attenuates — confirming the homogenization result we saw from the
+k-means analysis. Post-crisis, the network remains structurally more connected
+than in the pre-COVID period.
+
+──────────────────────────────────────────────────────────────
+SLIDE 13 — Results: Country-Level TCI Network  [~1min]
+──────────────────────────────────────────────────────────────
+We now zoom out to the country level. For each country c, we compute a
+within-country TCI — the average share of forecast error variance attributable
+to shocks from other domestic institutions. We then compute the correlation
+between these country-level TCI series and build a network.
+
+Five geographical communities emerge via Louvain detection.
+Group 1: the core DE/ES pair. Group 2: a broader core Western group including
+CH, NL, AT, FR, UK and RO. Group 3: a secondary cluster — Ireland, Poland,
+Denmark, Norway. Group 4: Italy and Sweden, more idiosyncratic. And Group 5:
+Greece, almost entirely isolated from the rest.
+
+This heterogeneity matters for portfolio construction. Countries whose domestic
+connectedness moves less synchronously — like Greece and Sweden — offer natural
+geographic diversification.
+
+──────────────────────────────────────────────────────────────
+SLIDE 13b — Results: Between-Country Spillovers  [~1min]
+──────────────────────────────────────────────────────────────
+Finally, we measure direct cross-border spillovers using the formula on screen:
+we average the GFEVD entries across all institution pairs spanning two countries,
+and do this for each rolling window.
+
+The 18×18 directional spillover matrix shows clear asymmetry — rows with
+uniformly high values identify the main exporting national systems.
+UK, France, Germany, and Spain consistently appear as the strongest net
+exporters of volatility across European borders.
+
+The directed network on the right makes this visual: the large blue node at
+the center is France — the dominant net receiver — while Romania and Belgium
+appear as net emitters. The arrow directions confirm the genuine directionality
+that a symmetric correlation approach would miss entirely.
+
+──────────────────────────────────────────────────────────────
+SLIDE 14 — Robustness  [~45s]
+──────────────────────────────────────────────────────────────
+All main results are robust along three dimensions.
+
+VAR order: p=1 and p=2 give virtually identical TCI dynamics and directional
+rankings. AIC/BIC consistently prefer p=1.
+
+Forecast horizon: varying H from 4 to 12 weeks shifts the TCI level slightly
+at shorter horizons, but rankings and time-variation patterns are preserved.
+
+Rolling window: varying W between 104 and 208 weeks preserves the COVID spike,
+the structural elevation, and the institutional rankings. Shorter windows
+amplify fluctuations; longer windows smooth them.
+
+And across all specifications, the near-linear DY–DCC association holds with
+r > 0.90.
+
+──────────────────────────────────────────────────────────────
+SLIDE 15 — Conclusion  [~1min 30s]
+──────────────────────────────────────────────────────────────
+Let me conclude with four main takeaways.
+
+First: European financial markets are structurally highly connected —
+TCI stays above 85% even in calm periods and surges to 95% during COVID,
+with a lasting post-COVID structural ratchet.
+
+Second: connectedness is not homogeneous. Large cross-border banks dominate as
+dual receivers and emitters, while peripheral-market banks are persistent net
+transmitters — the system is not simply "Too Big to Fail."
+
+Third: the post-COVID shift is structural and long-run. The frequency
+decomposition shows the long-run band nearly doubling its share of total TCI —
+this is durable rewiring, not transient panic.
+
+Fourth: systemic risk rankings are robust across methods. VAR-DY, DCC-GARCH,
+and MST centrality all point to the same institutions as the key risk hubs.
+
+For future work, we plan to extend to tail-risk connectedness via quantile
+approaches, test whether connectedness predicts future systemic volatility,
+and incorporate a portfolio backtesting dimension.
+
+Thank you — I am happy to take questions.
+
+==============================================================
+ESTIMATED TIMING:
+  Title .............. 0:30
+  Motivation ......... 1:30
+  Literature ......... 1:00
+  Data ............... 1:00
+  VAR-DY (a) ......... 1:30
+  VAR-DY (b) ......... 0:30
+  DCC & MST .......... 1:00
+  TCI Dynamics ....... 1:30
+  Frequency .......... 1:00
+  FROM & TO .......... 1:00
+  Net Spillovers ..... 1:00
+  DCC Dynamics ....... 0:45
+  DY vs DCC .......... 0:45
+  Regimes ............ 1:00
+  Cross-Method ....... 0:45
+  Networks (x3) ...... 1:00
+  Country TCI ........ 1:00
+  Country Spillov. ... 1:00
+  Robustness ......... 0:45
+  Conclusion ......... 1:30
+  ─────────────────────────
+  TOTAL .............. ~19:00
+==============================================================

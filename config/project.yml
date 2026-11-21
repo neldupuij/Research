@@ -1,0 +1,161 @@
+project_name: "vol_spillovers_eu_financials"
+
+# =============================================================================
+# PATHS
+# =============================================================================
+paths:
+  prices_raw:     "data/processed/prices_raw.csv"
+  returns_daily:  "data/processed/returns.csv"
+  returns_weekly: "data/processed/returns_weekly.csv"
+
+  out_var_dy:     "outputs/var_dy"
+  out_dcc:        "outputs/dcc_garch"
+  out_compare:    "outputs/comparison_var_dcc"
+  out_cluster:    "outputs/cluster_regimes"
+  out_mst_global: "outputs/mst_global"
+  out_mst_rolling: "outputs/mst_rolling"
+  out_mst_port:   "outputs/mst_portfolio"
+  out_freq_conn:  "outputs/freq_connectedness"
+
+# =============================================================================
+# PREPROCESSING
+# =============================================================================
+process:
+  remove_late:       true
+  min_start:         "2010-01-01"
+  min_obs:           252
+  drop_na_ratio_max: 0.20
+  keep_min_symbols:  3
+
+# =============================================================================
+# VAR-DY (Diebold-Yilmaz connectedness)
+# p_fixed   : lag order, held constant across all rolling windows (validated by 03_select_var_lag.R)
+# rolling_window : W in weeks (~3 years)
+# rolling_step   : thinning step between windows
+# forecast_horizon : H for GFEVD
+# =============================================================================
+var_dy:
+  p_fixed:          1
+  rolling_window:   156
+  rolling_step:     4
+  forecast_horizon: 10
+
+# =============================================================================
+# DCC-GARCH
+# strict : if true, fail when DCC does not converge (no fallback to sample corr)
+# =============================================================================
+garch_dcc:
+  strict: false
+
+# =============================================================================
+# DATA
+# =============================================================================
+data:
+  source:     "yahoo"
+  start_date: "2010-01-01"
+  end_date:   null
+
+  blacklist:
+    - "SVEG.OL"   # Sparebanken Vest - indisponible Yahoo
+    - "VMUK.L"    # Virgin Money UK
+    - "TRIO.AS"   # Trio
+
+  tickers:
+    # --- France ---
+    - "BNP.PA"    # BNP Paribas
+    - "ACA.PA"    # Crédit Agricole
+    - "GLE.PA"    # Société Générale
+    # --- Allemagne ---
+    - "DBK.DE"    # Deutsche Bank
+    - "CBK.DE"    # Commerzbank
+    - "PBB.DE"    # Deutsche Pfandbriefbank
+    # --- Espagne ---
+    - "SAN.MC"    # Banco Santander
+    - "BBVA.MC"   # BBVA
+    - "CABK.MC"   # CaixaBank
+    - "BKT.MC"    # Bankinter
+    - "SAB.MC"    # Banco Sabadell
+    - "UNI.MC"    # Unicaja Banco
+    # --- Italie ---
+    - "ISP.MI"    # Intesa Sanpaolo
+    - "UCG.MI"    # UniCredit
+    - "BAMI.MI"   # Banco BPM
+    - "BMPS.MI"   # Banca Monte dei Paschi di Siena
+    - "MB.MI"     # Mediobanca
+    - "BPE.MI"    # BPER Banca
+    - "FBK.MI"    # FinecoBank
+    - "BPSO.MI"   # Banca Popolare di Sondrio
+    - "BMED.MI"   # Banca Mediolanum
+    # --- Pays-Bas ---
+    - "INGA.AS"   # ING Groep
+    - "ABN.AS"    # ABN AMRO
+    - "VLK.AS"    # Van Lanschot Kempen
+    # --- Belgique ---
+    - "KBC.BR"    # KBC Group
+    # --- Autriche ---
+    - "EBS.VI"    # Erste Group Bank
+    - "RBI.VI"    # Raiffeisen Bank International
+    - "BG.VI"     # BAWAG Group
+    - "ADKO.VI"   # Addiko Bank
+    # --- Royaume-Uni ---
+    - "BARC.L"    # Barclays
+    - "LLOY.L"    # Lloyds Banking Group
+    - "HSBA.L"    # HSBC Holdings
+    - "STAN.L"    # Standard Chartered
+    - "NWG.L"     # NatWest Group
+    - "OSB.L"     # OSB Group
+    - "CBG.L"     # Close Brothers Group
+    - "INVP.L"    # Investec plc
+    - "STB.L"     # Secure Trust Bank
+    - "MTRO.L"    # Metro Bank
+    # --- Suisse ---
+    - "UBSG.SW"   # UBS Group
+    - "BAER.SW"   # Julius Baer
+    - "EFGN.SW"   # EFG International
+    - "VONN.SW"   # Vontobel Holding
+    - "CMBN.SW"   # Cembra Money Bank
+    - "BCVN.SW"   # Banque Cantonale Vaudoise
+    - "BCGE.SW"   # Banque Cantonale de Genève
+    # --- Suède ---
+    - "NDA-SE.ST" # Nordea
+    - "SWED-A.ST" # Swedbank A
+    - "SHB-A.ST"  # Handelsbanken A
+    - "SEB-A.ST"  # SEB A
+    # --- Danemark ---
+    - "DANSKE.CO" # Danske Bank
+    - "JYSK.CO"   # Jyske Bank
+    - "SYDB.CO"   # Sydbank
+    # --- Norvège ---
+    - "DNB.OL"    # DNB ASA
+    - "MING.OL"   # SpareBank 1 SMN
+    - "NONG.OL"   # SpareBank 1 Nord-Norge
+    # --- Portugal ---
+    - "BCP.LS"    # Millennium bcp
+    # --- Pologne ---
+    - "PKO.WA"    # PKO Bank Polski
+    - "PEO.WA"    # Bank Pekao
+    - "MBK.WA"    # mBank
+    - "ING.WA"    # ING Bank Śląski
+    - "ALR.WA"    # Alior Bank
+    - "MIL.WA"    # Bank Millennium
+    - "SPL.WA"    # Santander Bank Polska
+    # --- Tchéquie ---
+    - "KOMB.PR"   # Komerční banka
+    - "MONET.PR"  # Moneta Money Bank
+    # --- Irlande ---
+    - "A5G.IR"    # AIB Group
+    - "BIRG.IR"   # Bank of Ireland
+    - "PTSB.IR"   # Permanent TSB
+    # --- Grèce ---
+    - "ALPHA.AT"  # Alpha Bank
+    - "ETE.AT"    # National Bank of Greece
+    - "TPEIR.AT"  # Piraeus Bank
+    - "EUROB.AT"  # Eurobank
+    # --- Roumanie ---
+    - "TLV.RO"    # Banca Transilvania
+    - "BRD.RO"    # BRD - Groupe Société Générale
+    # --- Malte ---
+    - "BOV.MT"    # Bank of Valletta
+    # --- Islande ---
+    - "ARION.IC"  # Arion Bank
+    - "ISB.IC"    # Íslandsbanki

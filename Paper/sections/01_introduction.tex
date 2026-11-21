@@ -1,0 +1,221 @@
+\section{Introduction}\label{sec:intro}
+
+Over the past few decades, financial integration and innovation have
+profoundly reshaped the global capital markets. The liberalization of capital flows, the
+expansion of financial services and derivative instruments, and the rise of cross-border financial conglomerates
+have strengthened the links among financial institutions, sectors and countries. While such links may enhance
+market efficiency and diversification in tranquil periods, it also creates denser and intensive networks
+through which shocks can propagate swiftly and nonlinearly via multiple directed and undirected channels. The Asian financial crisis (1997--1998), the global financial crisis
+(2007--2009), the European sovereign debt crisis (2010--2012), and the COVID--19 episode
+demonstrated that local disturbances can escalate into systemic episodes of volatility and
+ fragility. Understanding how risk propagates across financial institutions and markets, and identifying
+which entities transmit or absorb shocks and volatility, have, therefore, become a central issue in macroprudential analysis and portfolio management.
+
+A majority of studies have examined contagion and systemic risk in the financial system, emphasizing the ``physical" network structure of links among financial institutions, such as interbank lending, derivative transactions, and overlapping portfolios \citep[see, for example][among others]{Allen_Gale_2000, NIER2007, Haldane_May_2011, GORTON2012, Acemoglu_et_al_2015, Glasserman_Young_2015, POLEDNA2015, GREENWOOD2015}.
+
+%Traditional approaches based on unconditional correlations or cointegration offer only a partial view of interdependence.
+Using various statistical and econometric methods, another strand of the literature extracts interdependencies among financial institutions from equity prices, circumventing the data confidentiality issues that often arise with physical financial networks. A natural and straightforward approach is to infer interdependencies from the correlation structure of equity returns \citep[e.g., see][]{Mantegna1999, Tumminello_2005,  TUMMINELLO2010, Massara_et_al_2017, Luu2025}.
+Starting from the seminal minimum spanning tree (MST) of \citet{Mantegna1999}, this work constructs correlation-based distance matrices, filters them into MSTs and related sparse graphs, and studies the resulting topology (clusters, hierarchy, and centrality) to understand market structure, systemic risk, and diversification. In their comprehensive review reports, \citet{MartiEtAl2020} and \cite{MASUDA2025} document two decades of developments in correlations, hierarchies, networks, and clustering in financial markets, including MSTs, planar filtered graphs, community detection, and their applications to portfolio construction and risk management. These methods are largely statistical and model-free: they rely on empirical correlations (or more general dependence measures) rather than on a specific dynamic parametric model.
+
+Since heteroskedasticity is often present in financial time series and volatility shocks can induce spurious correlations, it is necessary to employ methods that account for these effects. In this context, the multivariate GARCH models \citep{EngleKroner1995, Engle2002DCC, Cappiello_DCC_2006}, among others, can be used to estimate correlations, rather than relying on raw empirical correlations.  In their seminal work, the BEKK
+specification of \citet{EngleKroner1995} guarantees positive definiteness of the
+conditional covariance matrix and allows for rich cross-dynamics between variances and
+covariances. However, even the ``diagonal'' BEKK model implies $O(N^2)$ parameters in
+an $N$-dimensional system, and the full BEKK quickly becomes over-parameterized as $N$
+grows. This high dimensionality makes estimation computationally demanding and can lead
+to convergence issues or unstable coefficients, especially when models are re-estimated
+on rolling windows.
+By contrast, the Dynamic Conditional Correlation (DCC) model of \citet{Engle2002DCC}
+separates univariate volatility dynamics from the evolution of the correlation matrix.
+Each series is first modeled by a univariate GARCH, and a small number of additional
+parameters governs the dynamics of the common correlation process. As a result, the
+number of DCC parameters does not increase with $N$, making it far more tractable in
+high-dimensional systems of financial institutions. DCC also delivers a directly
+interpretable sequence of correlation matrices that can be mapped into time-varying
+network structures, consistent with the connectedness perspective. For empirical
+applications like ours, where $N$ is relatively large and dynamic analysis relies on
+rolling estimation, DCC--GARCH thus offers a practical and robust benchmark, while BEKK
+remains conceptually useful but less feasible in routine implementation.
+
+Nevertheless,
+as \citet{ForbesRigobon2002} emphasized, correlations
+tend to increase mechanically during crises, which can overstate contagion. Moreover, correlation-based measures are symmetric and do not capture the direction of spillovers among assets or  markets. An alternative approach employs multivariate econometric models to characterize directional linkages between equity returns, capturing phenomena such as causal effects, volatility spillovers.
+Among others, one of the key methods was introduced by \citet{Yilmaz2006}, who applied
+variance-decomposition techniques to quantify volatility spillover among European equity
+markets. This line of research was formalized by \citet{DieboldYilmaz2009}, who proposed
+the now-standard connectedness framework: within a vector autoregression (VAR), each
+variable's forecast error variance is decomposed into an own component and a cross
+component, the latter measuring how much of its future uncertainty is driven by shocks to
+other variables. \citet{DieboldYilmaz2012} refined the framework using the Generalized
+Forecast Error Variance Decomposition (GFEVD) of \citet{KoopPesaranShin1996} and
+\citet{PesaranShin1998}, which is invariant to variable ordering, and later work
+introduced directional (\emph{to}/\emph{from}) and net measures as well as
+rolling-window implementations \citep{DieboldYilmaz2014,DieboldYilmaz2015}.
+
+
+\citet{BarunikKrehlik2018} extend the connectedness framework to the frequency domain,
+decomposing spillovers into short-term and long-term components. Short-frequency
+connectedness often reflects transient shocks linked to liquidity or sentiment, whereas
+long-frequency connectedness captures persistent macro-financial co-movement. Combining
+frequency decomposition with rolling estimation provides a comprehensive time--frequency
+view of systemic interdependence.
+Altogether, these developments in VAR-GFEVD have transformed spillover analysis into a flexible and interpretable tool for monitoring systemic linkages in real time.
+
+Viewed through a network lens \citep{jonkleinberg2010networks, barabasi2016network, Glasserman_Young_2015}, the connectedness matrix extracted from the VAR-GFEVD approach forms a weighted, directed graph
+where nodes represent financial institutions and edges represent volatility transmission.
+High connectedness implies denser and tighter interactions among nodes, implying limited diversification and faster
+propagation of shocks. This interpretation somewhat aligns with systemic-risk measures such as
+CoVaR \citep{AdrianBrunnermeier2016}, MES and SES \citep{Acharya2017}, and SRISK
+\citep{BrownleesEngle2017}, which focus on tail risk and capital shortfall, but
+connectedness differs by decomposing overall forecast uncertainty and highlighting the
+directional flow of risk, revealing which institutions act as persistent emitters or
+receivers of volatility.
+
+%\subsection{European context}  % Remove this subsection title
+
+Among almost all European markets, financial integration within the Economic and Monetary Union (EMU) has deepened
+cross-border exposures among banks, insurers, and asset managers. While integration has
+enhanced efficiency, it has created potential channels for cross-border transmission of shocks and heightened systemic vulnerability in the whole area. The
+``sovereign--bank nexus,'' in which declines in sovereign creditworthiness weaken
+domestic banks and feed back into sovereign stress, epitomizes this feedback mechanism
+\citep{BlackCorreaHuangZhou2016,BonaldiHortacsuKastl2015}. During the sovereign debt
+crisis, volatility shocks originating in peripheral countries quickly spread to core
+European institutions, amplifying funding and liquidity pressures. Measuring volatility
+connectedness among European financials thus offers a quantitative lens to track
+contagion, assess the strength of domestic versus cross-border channels, and evaluate
+systemic fragility.
+
+
+All in all, the pertinent literature consistently shows that volatility spillovers are time-varying, intensify
+during crises, and reveal key propagation channels of systemic risk. Connectedness
+measures provide a transparent, network-consistent way to map these linkages, while DCC,
+BEKK, multilayer, clustered, and correlation-network frameworks offer alternative lenses
+on dependence dynamics. Yet few studies have jointly applied the full Diebold--Yilmaz framework to European
+financial institutions while (i)~formally testing for structural breaks in the
+connectedness process, (ii)~decomposing spillovers across frequency bands to separate
+transient contagion from durable structural integration, (iii)~identifying connectedness
+regimes directly from GFEVD feature vectors without pre-labelling crisis episodes, and
+(iv)~benchmarking model-based spillovers against model-free correlation and MST network
+centrality across the full institutional cross-section. Addressing this gap, the present
+paper delivers each of these analyses on a broad panel of 63 European financial
+institutions, providing both formal statistical tests and cross-method validation of the
+identified systemic risk rankings.
+
+
+%\subsection{Why equity volatility?}
+
+%Across various capital and financial markets,  the equity market incorporates forward-looking information about firms' expected profitability, risk, and resilience. For financial institutions, stock-price fluctuations react rapidly to changes in funding conditions, sovereign risk, liquidity stress, and policy interventions. Although a rich literature studies volatility using range-based or realized-volatility estimators \citep{AlizadehBrandtDiebold2002, AndersenBollerslevDieboldLabys2003}, in the present paper we do \emph{not} rely on such high-frequency or HLOC-based proxies. Instead, following a large strand of connectedness applications, we work directly with \emph{weekly log-returns}. When these returns enter a VAR with rolling windows, their conditional second-moment dynamics act as volatility proxies and capture the transmission of market-perceived uncertainty across institutions. This approach provides a consistent and model-free way to track volatility spillovers even when intraday data are unavailable.  %%% Put somewhere else. not here.
+
+%\subsection{Econometric versus statistical network approaches}
+
+%In parallel to the VAR--GFEVD and multivariate GARCH literature, a large econophysics and machine-learning strand models financial markets directly through empirical dependence networks and hierarchical clustering. Starting from the seminal minimum spanning tree (MST) of \citet{Mantegna1999}, this work constructs correlation-based distance matrices, filters them into MSTs and related sparse graphs, and studies the resulting topology---clusters, hierarchy, and centrality---to understand market structure, systemic risk, and diversification. In their comprehensive review reports, \citet{MartiEtAl2020} and \cite{MASUDA2025} document two decades of developments in correlations, hierarchies, networks, and clustering in financial markets, including MSTs, planar filtered graphs, community detection, and their applications to portfolio construction and risk management. These methods are largely statistical and model-free: they rely on empirical correlations (or more general dependence measures) rather than on a specific dynamic parametric model.
+
+In our present paper, we explicitly bridge the econometric connectedness tradition (VAR--GFEVD and
+DCC--GARCH) with the statistical correlation-network approach. On the econometric side,
+we estimate volatility connectedness based on VAR models for equity volatility and use
+multivariate DCC--GARCH models for returns to obtain time-varying covariance structures.
+On the statistical side, we construct correlation matrices for the same universe of
+institutions, filter them via MSTs and related network techniques, and extract clusters
+and compute centrality measures of individual financial institutions.% in the spirit of \citet{Mantegna1999,MartiEtAl2020}.
+A key
+question is whether periods and institutions characterized by high model-based
+connectedness (VAR or DCC) are also central in purely statistical correlation networks,
+and to what extent the two perspectives convey consistent information about systemic risk
+and diversification.
+
+%\subsection{Scope and methodology}
+
+The study applies the Diebold--Yilmaz connectedness framework to standardized weekly
+equity log-returns, which we treat as return-based volatility proxies, for major European
+financial institutions (banks, insurers, and diversified financials). We compute total,
+directional, and net connectedness indices using a rolling VAR($p$)--GFEVD specification
+to capture time variation in spillovers. As covariance-based benchmarks, we estimate
+DCC--GARCH models and derive time-varying correlation matrices and associated network
+diagnostics. In parallel, we build correlation-based networks filtered through MSTs and
+hierarchical clustering, following the methodology summarized in \citet{MartiEtAl2020}.
+This dual setup allows us to compare (i)~model-implied volatility spillovers,
+(ii)~correlation-based statistical networks, and (iii)~their joint implications for
+systemic risk and portfolio design, including simple portfolio rules that tilt away from
+highly connected or highly central institutions.
+
+%\subsection{Research objectives}
+
+The paper addresses five main questions:
+\textbf{(i)}~How large and state-dependent is volatility connectedness among European
+financial institutions, and how does it behave around major stress episodes? Can
+structural breaks be formally identified and dated?
+\textbf{(ii)}~Which institutions act as persistent net transmitters or receivers of
+volatility, and does this role differ across short-run and long-run frequency bands?
+\textbf{(iii)}~What distinct connectedness regimes emerge directly from the rolling
+GFEVD data, and what structural features characterise each regime beyond the aggregate
+TCI level?
+\textbf{(iv)}~How do model-based spillover rankings compare to model-free centrality
+measures from correlation and MST networks? Do the two approaches identify the same
+systemic risk hubs?
+\textbf{(v)}~As a step toward portfolio applications, how do connectedness and MST
+centrality measures compare as indicators of systemic importance, and what do they
+imply for risk-aware allocations? Formal backtesting is left for future work.
+
+%\subsection{Contributions and implications}
+
+This paper makes five main contributions to the connectedness and systemic-risk
+literature. %\citep{DieboldYilmaz2009,DieboldYilmaz2012,DieboldYilmaz2014,MartiEtAl2020}.
+
+\textbf{First}, we provide a systematic cross-method centrality validation on a broad
+European banking panel. Using Spearman rank correlations on a comparable strength basis, we show that institutions
+identified as volatility transmitters by the VAR--DY framework also occupy hub
+positions in correlation-based networks ($\rho = 0.97$, $p \approx 0$)
+and MST weighted-degree rankings ($\rho = 0.70$, $p \approx 0$, $n = 63$). This near-perfect
+alignment across fundamentally different modelling approaches (variance decompositions
+versus raw correlation networks) provides strong cross-method robustness for the systemic
+risk rankings.
+
+\textbf{Second}, we formally integrate structural instability into the empirical design
+through Bai--Perron multiple-break estimation and a Chow test targeted at the COVID--19
+onset. Rather than treating COVID--19 as an ex post label, we identify four statistically
+significant break dates in the TCI series (June 2017, June 2018, March 2020, February 2023),
+with the Chow test yielding $F = 577.74$ ($p \approx 0$) at the pandemic onset. This
+formal approach distinguishes our analysis from descriptive applications that note the
+COVID spike without testing for regime change.
+
+\textbf{Third}, we document a persistent post-COVID ratcheting of systemic connectedness:
+TCI stabilises well above pre-2019 levels even as realized volatility recedes. This
+structural shift is visible across both VAR--DY and DCC--GARCH measures ($r = 0.94$,
+$R^2 = 0.88$), suggesting a lasting change in the topology of European financial volatility
+networks. The results contribute to macroprudential surveillance by showing that
+combining econometric connectedness with correlation-based network centrality yields
+robust, interpretable, and formally validated indicators of systemic risk.
+
+\textbf{Fourth}, we extend the time-domain analysis to the frequency domain using the
+spectral connectedness decomposition of \citet{BarunikKrehlik2018}. We show that the
+post-COVID ratcheting of systemic connectedness is driven primarily by a structural
+expansion of the \emph{long-run} band (cycles exceeding 8 weeks), whose share of total
+TCI nearly doubles from approximately 25\% to 45\% during and after the pandemic.
+Short-run spillovers (2--4 week cycles), by contrast, spike transiently and then recede.
+This frequency decomposition distinguishes permanent structural deepening of integration
+from transient contagion, addressing the ``largely descriptive'' critique of aggregate
+TCI analysis. At the institutional level, the decomposition identifies frequency-specific
+risk hubs: UBS (UBSG.SW) is the dominant long-run structural transmitter yet does not
+appear among the top short-run emitters, a nuance that aggregate net spillovers mask.
+
+\textbf{Fifth}, we identify connectedness regimes directly from the data by applying
+$k$-means clustering to a five-dimensional summary vector of rolling GFEVD statistics
+(system-wide TCI, cross-sectional dispersion and skewness of net spillovers, maximum
+net transmitter, and top-5 concentration). The silhouette criterion selects $K^{*} = 2$
+regimes: a calm state (TCI $\approx 88\%$, high dispersion, positive skew) and a crisis
+state (TCI $\approx 94\%$, lower dispersion, negative skew). The crisis regime exhibits
+\emph{network homogenization}: rather than being driven by one or two dominant
+transmitters, shocks distribute more uniformly across the system under stress. This
+feature is invisible to aggregate TCI analysis and has direct implications for
+macroprudential surveillance and the targeting of stress-test scenarios.
+
+%\subsection{Structure}
+
+The rest of the paper is organized as follows.
+%Section~\ref{sec:lit} reviews the related literature on volatility spillovers, systemic risk, and correlation-based networks.
+Section~\ref{sec:data_method} presents the data, the construction of weekly return-based
+volatility proxies, the econometric models, and the statistical network methodology.
+Section~\ref{sec:results} reports the empirical results, including the comparison between
+econometric and correlation-based networks and the portfolio-oriented discussion.
+Section~\ref{sec:concl} concludes and discusses implications for risk management and
+financial stability.

@@ -1,0 +1,22 @@
+# Python dependencies for Research pipeline
+# Install with: pip install -r requirements.txt
+
+# Network analysis
+networkx>=2.8
+
+# Louvain community detection — REQUIRED (hard dependency for script 10)
+# Script 10_plot_country_network.py will raise ImportError if this is missing.
+python-louvain>=0.16
+
+# Data handling
+pandas>=1.4
+numpy>=1.22
+
+# Statistical analysis
+scipy>=1.8
+
+# Visualisation
+matplotlib>=3.5
+
+# Configuration
+pyyaml>=6.0

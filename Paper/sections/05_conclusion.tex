@@ -1,0 +1,90 @@
+\section{Discussion and Concluding Remarks}\label{sec:concl}
+
+This study provides an integrated examination of volatility spillovers among major
+European financial institutions using the Diebold--Yilmaz connectedness framework,
+multivariate DCC--GARCH models, minimum spanning tree networks, and country-level
+connectedness indicators. Across all three methods, the evidence consistently highlights
+a financial system that is structurally highly interconnected, strongly cyclical, and
+dominated by a small core of institutions whose volatilities co-move tightly over time.
+
+A first central result is the level and time-variation of system-wide connectedness. The
+Total Connectedness Index (TCI) remains exceptionally high even in tranquil periods,
+typically in the upper $80\%$ range, indicating that the volatility of European financial
+stocks is largely driven by common shocks rather than idiosyncratic fluctuations. During
+global stress episodes, notably the COVID-19 shock, the TCI rises sharply and
+persistently, confirming that systemic disturbances compress idiosyncratic components and
+amplify the propagation of uncertainty across institutions.
+
+A second key finding concerns the cross-sectional structure of spillovers. Directional
+and net connectedness measures reveal that a stable group of large, cross-border European
+banks consistently sits at the centre of volatility transmission. These institutions are
+simultaneously among the main recipients and emitters of shocks. Conversely, smaller or
+more domestically focused institutions exhibit more peripheral roles. These persistent
+asymmetries underscore the existence of structural risk hubs whose volatility dynamics
+dominate the rest of the system.
+
+Third, as a formal robustness check, the estimation of DCC--GARCH correlations shows
+patterns highly consistent with VAR-based connectedness ($r = 0.94$, $R^2 = 0.88$
+between TCI and mean absolute DCC correlation). Both spike simultaneously during crisis
+periods, and DCC leads TCI by approximately one window, suggesting that the fast-moving
+covariance structure contains early-warning information about upcoming shifts in
+variance-decomposition connectedness.
+
+\textbf{Fourth}, cross-method comparison of institutional centrality confirms that the
+systemic risk rankings obtained from the VAR--DY framework are robust to methodology
+choice. Using a comparable strength basis (VAR--DY time-averaged TO strength versus $\sum_j|\hat\rho_{ij}|$),
+the Spearman rank correlation with correlation strength reaches $\rho = 0.97$ ($p \approx 0$,
+$n = 63$), and the correlation with MST weighted degree is $\rho = 0.70$ ($p \approx 0$),
+both statistically highly significant. Institutions sitting at the centre of the econometric
+spillover network also occupy hub positions in purely statistical correlation-based networks,
+reinforcing the reliability of the identified risk hubs. This near-perfect alignment means
+that even model-free, computationally simple correlation-based centrality recovers the same
+hierarchy of systemic importance as the more sophisticated variance-decomposition framework.
+
+\textbf{Fifth}, $k$-means clustering of the rolling GFEVD feature vectors identifies
+two well-separated connectedness regimes (mean silhouette $= 0.54$): a calm regime
+(TCI $\approx 88\%$, high cross-sectional dispersion of net spillovers, positive skew)
+and a crisis regime (TCI $\approx 94\%$, uniform spillovers, negative skew). The crisis
+regime is associated with network homogenization: shocks distribute more uniformly and
+the dominance of single transmitters diminishes, a structural signature that is
+invisible in aggregate TCI analysis alone.
+
+\textbf{Sixth}, the analysis of within-country connectedness highlights substantial heterogeneity
+across Europe. While most countries exhibit very high domestic spillover levels, their
+dynamics differ markedly: some markets display smooth but persistently elevated
+connectedness, whereas others experience larger swings or sharper regime shifts. This
+heterogeneity is not only relevant for understanding cross-border contagion mechanisms,
+it also has direct implications for portfolio construction. Countries whose financial
+institutions move less synchronously or react differently to global shocks naturally offer
+greater diversification potential. Identifying these national clusters and characterizing
+their spillover dynamics therefore provides a first step toward designing geographically
+diversified portfolios that are more resilient to systemic volatility in Europe.
+
+\textbf{Seventh}, the frequency-domain decomposition \citep{BarunikKrehlik2018} reveals
+that the nature of systemic connectedness changes qualitatively across crises. In tranquil
+periods, short-run spillovers (cycles of 2--4 weeks) dominate the Total Connectedness
+Index, reflecting high-frequency market co-movement. During and after the COVID--19 shock,
+however, the long-run band (cycles exceeding 8 weeks) expands from roughly 25\% to 45\%
+of total TCI and remains elevated, suggesting a structural deepening of financial
+integration rather than transient panic. At the institutional level, UBS (UBSG.SW) emerges
+as the dominant long-run structural transmitter while being absent from the short-run
+top-5, a frequency-heterogeneous role that aggregate TCI alone would not reveal. These
+results are consistent with the post-COVID ratcheting of connectedness documented
+in Section~\ref{subsec:tci_dynamics} being driven by durable structural rewiring rather than
+the persistence of short-term contagion channels.
+
+%\subsection*{Limitations and Future Work}
+
+%\noindent\textit{Limitations.} The correlation-based full networks are constructed without multiple testing correction, which may inflate network density. This concern is mitigated by basing inferential conclusions on the MST (which retains only $N-1$ edges by construction) and the VAR--DY framework (which does not rely on individual correlation significance tests). Implementing a Benjamini--Hochberg correction for the full correlation networks is a natural robustness extension. The Louvain community assignments are perfectly stable across 100 random restarts (mean NMI $= 1.00$), so the five-country-group structure is entirely robust to algorithmic randomness. Additionally, the cross-method centrality comparison ($\rho = 0.97$ with correlation strength, $\rho = 0.70$ with MST weighted degree) uses full-sample static correlation matrices rather than the time-varying DCC-estimated $R_t$ matrices; using true DCC matrices would provide an even more direct comparison.
+
+Although the present work delivers a complete analysis covering connectedness dynamics,
+formal structural break tests, frequency-domain decomposition, data-driven regime
+identification, directional spillovers, DCC-based dependence, and cross-method centrality
+validation, several important extensions remain.
+
+%First, the present analysis characterises cross-country dependence through static full-sample measures (within-country TCI, between-country spillovers, and TCI correlation  networks). A natural extension is to study how these structures evolve over time --- whether specific geographical blocks display stronger co-movements during stress episodes, and whether the between-country spillover hierarchy is stable across regimes.
+%In addition, a later stage of the project will investigate whether elements of the correlation or connectedness matrices can help explain or predict future movements in systemic volatility, assessing whether dependence structures contain early-warning information about upcoming changes in spillover intensity. Next, we will incorporate a portfolio dimension, implementing and backtesting strategies that tilt away from high-connectedness or high-centrality institutions, comparing connectedness-informed allocations with MST-based hierarchical portfolios.
+
+First, our analysis can be extended to a broader range of connectedness measures, including tail risk--based approaches (e.g., quantile connectedness) and measures inferred from alternative volatility modeling frameworks, such as multivariate HAR models and multivariate multifractal models.
+% https://gabauerdavid.github.io/ConnectednessApproach/2021ChatziantoniouGabauerStenfors. Cite this paper: Chatziantoniou, I., Gabauer, D., & Stenfors, A. (2021). Interest rate swaps and the transmission mechanism of monetary policy: A quantile connectedness approach. Economics Letters, 204, 109891.
+In addition, we can investigate whether connectedness and network metrics can help explain or predict future movements in systemic volatility, assessing whether dependence structures contain early-warning signals of upcoming changes in spillover intensity. Next, it is also worthwhile to incorporate a portfolio dimension through the implementation and backtesting of investment strategies that exploit network information, comparing connectedness-informed allocations with traditional portfolio benchmarks. Finally, the networks extracted from the equity market can be analyzed jointly with other forms of physical linkages among European financial institutions, including interbank relationships, overlapping portfolios, derivative exposures, fixed-income transactions, foreign exchange transactions, and other financial exposures, with the aim of developing a more comprehensive multilayer architecture of financial interconnectedness in Europe. We believe that these extensions will broaden the scope of the present work by linking systemic risk measurement, dependence modeling, and practical financial applications.

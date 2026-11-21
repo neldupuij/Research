@@ -1,0 +1,604 @@
+\documentclass[12pt,a4paper]{article}
+
+% ---------------------------------------------------------------
+% ENCODING & LANGUAGE
+% ---------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+% ---------------------------------------------------------------
+% MATHEMATICS
+% ---------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ---------------------------------------------------------------
+% GRAPHICS
+% ---------------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{longtable}
+% Logos are static assets kept locally.
+% All other figures point directly to Research/outputs/ so regenerated
+% figures are picked up automatically without any manual copying.
+\graphicspath{{outputs_overleaf/}}
+
+% ---------------------------------------------------------------
+% PAGE LAYOUT
+% ---------------------------------------------------------------
+\usepackage{geometry}
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\usepackage{setspace}
+\onehalfspacing
+
+% ---------------------------------------------------------------
+% HEADER / FOOTER
+% ---------------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\setlength{\headsep}{16pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\itshape Volatility Spillovers $\cdot$ European Financial Institutions}
+\renewcommand{\sectionmark}[1]{}
+\renewcommand{\subsectionmark}{}
+\fancyhead[R]{}
+\fancyfoot[C]{\thepage}
+
+% ---------------------------------------------------------------
+% BIBLIOGRAPHY
+% ---------------------------------------------------------------
+\usepackage[authoryear,round]{natbib}
+
+% ---------------------------------------------------------------
+% HYPERLINKS
+% ---------------------------------------------------------------
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+
+% ---------------------------------------------------------------
+% TABLE OF CONTENTS SPACING
+% ---------------------------------------------------------------
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforesecskip}{4pt}
+
+% ---------------------------------------------------------------
+% UTILITIES
+% ---------------------------------------------------------------
+\usepackage{etoolbox}
+
+% Abstract: full-width (no lateral indentation)
+\patchcmd{\abstract}{\quotation}{\par\noindent}{}{}
+\patchcmd{\endabstract}{\endquotation}{\par}{}{}
+
+% ---------------------------------------------------------------
+% CUSTOM COMMANDS
+% ---------------------------------------------------------------
+\newcommand{\monthyeardate}{%
+  \ifcase\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space\number\year
+}
+
+\newcommand{\keywords}[1]{\par\noindent\textbf{Keywords:} \textit{#1}}
+
+
+\usepackage{xcolor}
+
+
+% ================================================================
+\begin{document}
+% ================================================================
+
+% ---------------------------------------------------------------
+% TITLE PAGE
+% ---------------------------------------------------------------
+\begin{titlepage}
+  \thispagestyle{empty}
+  \newgeometry{top=3.5cm, bottom=3cm, left=3cm, right=3cm}
+  \begin{center}
+
+    \vspace*{0.5cm}
+
+    {\LARGE\bfseries Volatility Spillovers and Connectedness Across Equities\\[8pt]
+    of European Financial Institutions\par}
+
+    \vspace{1.8cm}
+
+{\large
+Nel Choisnet Dupuij\textsuperscript{$\dagger$}\quad
+Duc Thi Luu\textsuperscript{$\ddagger$}\par}
+
+\vspace{0.3cm}
+
+{\normalsize
+\textsuperscript{$\dagger$}De Vinci Higher Education, De Vinci Research Center, Paris, France\par
+\textsuperscript{$\dagger$}\texttt{nel.choisnet\_dupuij@edu.devinci.fr}\par
+
+\textsuperscript{$\ddagger$}De Vinci Higher Education, De Vinci Research Center, Paris, France\par
+\textsuperscript{$\ddagger$}\texttt{duc-thi.luu@devinci.fr}
+}
+
+    \vfill
+
+    {\normalsize\monthyeardate}
+
+  \end{center}
+  \restoregeometry
+\end{titlepage}
+
+% ---------------------------------------------------------------
+% ABSTRACT
+% ---------------------------------------------------------------
+\renewcommand{\abstractname}{\Large\bfseries Abstract}
+\begin{abstract}
+
+
+In this paper, we investigate how equity returns synchronize and how their volatility spills over across major listed European banks. To this end, network connectedness between banks is identified and measured using the Diebold-Yilmaz's framework based on rolling VAR models and generalized forecast error variance decompositions (VAR-GFEVD). We then measure total, directional, and net spillovers across banks, insurers, and diversified financial firms on a rolling basis.
+We benchmark these measures against
+multivariate DCC–GARCH models for returns and against purely statistical dependence networks built from correlation matrices filtered via a graph-filtering algorithm, namely the minimum spanning tree (MST).
+
+Beyond network system-wide analysis, we adopt a country-level clustering approach in which banks are grouped by domicile. Within this setting, we compute domestic connectedness indices based exclusively on VAR-GFEVD spillovers. This allows us to quantify synchronization within national banking systems, compare their dynamics across countries, and map the potential transmission pathways at both bank and country levels.
+
+Among other findings, the results point to persistently high system-wide connectedness with a sharp rise during COVID-19. Post-COVID connectedness stabilizes above pre-2019 norms, suggesting a lasting post-COVID change in volatility
+linkages. A closer inspection reveals the heterogeneous roles of individual institutions as net emitters, receivers, or both. Further decomposition of connectedness across different time horizons also uncovers varying institutional roles, for example, a top long-run emitter may not necessarily play the same role in the short or medium run. The post-COVID ratcheting of connectedness reflects a structural rewiring of long-run linkages, not just transient panic.
+At the country-level, we also find a hierarchical structure in which some nations function as core markets, while others operate at the periphery.
+In addition, we document a strong association across the connectedness-based methods and show that institutions central in model-based spillover networks also generally occupy hub positions in correlation/MST networks, providing cross-method robustness for systemic risk rankings.
+
+%We finally discuss portfolio implications, showing that diversification within a banking-only universe is fragile when a tightly connected core dominates volatility transmission, and that risk-aware allocations should exploit country-level heterogeneity and dynamic network information rather than static correlation structures.
+
+%We examine how equity volatility spreads among major European financial institutions. Using a VAR-based connectedness framework with generalized forecast error variance decompositions (GFEVD), we measure total, directional, and net spillovers across banks, insurers, and diversified financial firms on a rolling basis. We benchmark these econometric measures against multivariate DCC--GARCH models for returns and against purely statistical dependence networks built from correlation matrices filtered via a graph algorithm such as  the minimum spanning tree (MST).
+
+%Volatility spillovers rise sharply during crises and are clustered in a small set of large institutions. We formally date regime changes using Bai--Perron multiple-break tests (four breaks identified, Chow $F = 577.74$ at the COVID--19 onset) and identify two distinct connectedness regimes via $k$-means clustering of rolling GFEVD feature vectors: a calm state (TCI $\approx 88\%$) and a crisis state (TCI $\approx 94\%$) associated with network homogenization. A frequency-domain decomposition shows that the post-COVID ratcheting of connectedness reflects a structural expansion of long-run linkages (cycles $> 8$ weeks), not transient panic.
+
+
+
+
+We finally discuss the implications for macroprudential policies and portfolio construction. From the perspective of policymakers, the consistently high level of system-wide connectedness, along with the heterogeneous roles of individual institutions and countries may create complex challenges in determining whether the system faces ``Too Big to Fail?", ``Too Many to Fail?'', or ``Too Interconnected/Correlated to Fail?" situations. From the perspective of investors,  our results suggest that diversification within a banking-only universe is fragile when a tightly connected core dominates volatility transmission, and that risk-aware allocations should exploit country-level heterogeneity and dynamic network information rather than static correlation structures.
+\end{abstract}
+
+%\vspace{1cm}
+\keywords{Volatility Spillovers; Connectedness; Systemic Risk;
+Network Analysis; Frequency Connectedness; Connectedness Regimes;
+Financial Stability}
+\clearpage
+\tableofcontents
+\newpage
+
+% ---------------------------------------------------------------
+% SECTIONS
+% ---------------------------------------------------------------
+\input{sections/01_introduction}
+%\input{sections/02_literature}
+\input{sections/03_methodology}
+\input{sections/04_results}
+\input{sections/05_conclusion}
+\clearpage
+% ---------------------------------------------------------------
+% BIBLIOGRAPHY
+% ---------------------------------------------------------------
+\bibliographystyle{plainnat}
+\bibliography{bibliography/references}
+\clearpage
+% ---------------------------------------------------------------
+% APPENDIX A: CENTRALITY RANK HEATMAPS
+% ---------------------------------------------------------------
+\appendix
+\section{Cross-Method Centrality Rank Heatmaps}\label{app:centrality_heatmaps}
+
+The figures below complement Section~\ref{subsec:centrality} by showing how the top-10
+institutions by strength and betweenness centrality are ranked across the three estimation
+methods (VAR--DY, DCC, MST) and the three sub-periods (pre-COVID, during COVID,
+post-COVID). Colour encodes rank within each method--period cell: yellow indicates the
+highest rank (most central institution), dark purple indicates the lowest rank among the
+top-10 shown.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{rank_heatmap_strength.png}
+  \caption{Rank heatmap: strength centrality. Each cell shows the rank of an institution
+  within the top-10 for a given method and sub-period. Yellow = rank 1 (most central);
+  dark purple = rank 10. The stable positioning of BNP.PA, ACA.PA, SAN.MC, and GLE.PA
+  at the top across methods and periods confirms the robustness of the core risk hub
+  identification.}
+  \label{fig:rank_heatmap_strength}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{rank_heatmap_betweenness.png}
+  \caption{Rank heatmap: betweenness centrality. Betweenness measures how often an
+  institution lies on shortest paths between other pairs of nodes; high betweenness
+  indicates a ``bridge'' role in the network. Agreement across methods is weaker than for
+  strength (the DCC and MST betweenness rankings are more sensitive to local network
+  topology), but BNP.PA and ACA.PA retain high betweenness in the majority of cells.}
+  \label{fig:rank_heatmap_betweenness}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{trajectory_strength.png}
+  \caption{Strength centrality trajectories across sub-periods (Pre $\to$ During $\to$
+  Post COVID) for each method separately. Lines connect the same institution across
+  periods. In the DCC and MST panels, strength peaks during COVID as the network tightens
+  around core hubs, then partially unwinds post-crisis. The VAR--DY panel shows a
+  relative compression of scores during COVID (bounded GFEVD shares) but preserves
+  ordinal rankings.}
+  \label{fig:trajectory_strength}
+\end{figure}
+
+% ---------------------------------------------------------------
+% APPENDIX B: SAMPLE COMPOSITION
+% ---------------------------------------------------------------
+\section{Sample Composition}\label{app:sample}
+
+The table below lists the 63 European financial institutions retained after applying the
+data filters described in Section~\ref{sec:data_method}. Sector codes: \textbf{B} =
+Commercial Bank; \textbf{S} = Savings/Co-operative Bank; \textbf{W} = Wealth Management
+/ Private Bank; \textbf{D} = Diversified Financial.
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcc|llcc}
+\hline
+\textbf{Ticker} & \textbf{Institution} & \textbf{Ctry} & \textbf{Sec} &
+\textbf{Ticker} & \textbf{Institution} & \textbf{Ctry} & \textbf{Sec} \\
+\hline
+A5G.IR   & AIB Group              & IE & B &
+JYSK.CO  & Jyske Bank             & DK & B \\
+ACA.PA   & Crédit Agricole        & FR & B &
+KBC.BR   & KBC Group              & BE & B \\
+ALR.WA   & Alior Bank             & PL & B &
+KOMB.PR  & Komerční banka         & CZ & B \\
+BAER.SW  & Julius Baer            & CH & W &
+LLOY.L   & Lloyds Banking Group   & UK & B \\
+BAMI.MI  & Banco BPM              & IT & B &
+MB.MI    & Mediobanca             & IT & B \\
+BARC.L   & Barclays               & UK & B &
+MBK.WA   & mBank                  & PL & B \\
+BBVA.MC  & BBVA                   & ES & B &
+MIL.WA   & Bank Millennium        & PL & B \\
+BCGE.SW  & Banque Cant.\ Genève   & CH & B &
+MING.OL  & SpareBank 1 SR-Bank    & NO & S \\
+BCP.LS   & Millennium BCP         & PT & B &
+NDA-SE.ST& Nordea Bank            & SE & B \\
+BCVN.SW  & Banque Cant.\ Vaudoise & CH & B &
+NONG.OL  & Sparebanken Vest       & NO & S \\
+BIRG.IR  & Bank of Ireland        & IE & B &
+NWG.L    & NatWest Group          & UK & B \\
+BKT.MC   & Bankinter              & ES & B &
+PEO.WA   & Bank Pekao             & PL & B \\
+BMED.MI  & Banca Mediolanum       & IT & D &
+PKO.WA   & PKO Bank Polski        & PL & B \\
+BMPS.MI  & Monte dei Paschi       & IT & B &
+PTSB.IR  & Permanent TSB          & IE & B \\
+BNP.PA   & BNP Paribas            & FR & B &
+RBI.VI   & Raiffeisen Bank Intl.  & AT & B \\
+BPE.MI   & BPER Banca             & IT & B &
+SAB.MC   & Banco Sabadell         & ES & B \\
+BPSO.MI  & Bca Pop.\ di Sondrio   & IT & B &
+SAN.MC   & Banco Santander        & ES & B \\
+BRD.RO   & BRD-SocGen Romania     & RO & B &
+SEB-A.ST & SEB                    & SE & B \\
+CABK.MC  & CaixaBank              & ES & B &
+SHB-A.ST & Handelsbanken          & SE & B \\
+CBG.L    & Close Brothers         & UK & B &
+SPL.WA   & Santander Bank Polska  & PL & B \\
+CBK.DE   & Commerzbank            & DE & B &
+STAN.L   & Standard Chartered     & UK & B \\
+DANSKE.CO& Danske Bank            & DK & B &
+STB.L    & Secure Trust Bank      & UK & B \\
+DBK.DE   & Deutsche Bank          & DE & B &
+SWED-A.ST& Swedbank               & SE & B \\
+DNB.OL   & DNB Bank               & NO & B &
+TLV.RO   & Banca Transilvania     & RO & B \\
+EBS.VI   & Erste Group Bank       & AT & B &
+TPEIR.AT & Piraeus Bank           & GR & B \\
+EFGN.SW  & EFG International      & CH & W &
+UBSG.SW  & UBS Group              & CH & B \\
+ETE.AT   & National Bank of Greece& GR & B &
+UCG.MI   & UniCredit              & IT & B \\
+EUROB.AT & Eurobank Ergasias      & GR & B &
+VLK.AS   & Van Lanschot Kempen    & NL & W \\
+GLE.PA   & Société Générale       & FR & B &
+VONN.SW  & Vontobel Holding       & CH & W \\
+HSBA.L   & HSBC Holdings          & UK & B &
+           &                       &    &   \\
+ING.WA   & ING Bank Śląski        & PL & B &
+           &                       &    &   \\
+INGA.AS  & ING Group              & NL & B &
+           &                       &    &   \\
+INVP.L   & Investec               & UK & D &
+           &                       &    &   \\
+ISP.MI   & Intesa Sanpaolo        & IT & B &
+           &                       &    &   \\
+\hline
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------------
+% APPENDIX C: DESCRIPTIVE STATISTICS
+% ---------------------------------------------------------------
+\section{Descriptive Statistics of Weekly Log-Returns}\label{app:sumstats}
+
+{\footnotesize\setlength{\tabcolsep}{4pt}%
+\input{outputs_overleaf/tab_summary_statistics.tex}%
+}
+
+% ---------------------------------------------------------------
+% APPENDIX D: ADDITIONAL EMPIRICAL FIGURES
+% ---------------------------------------------------------------
+\section{Additional Empirical Figures}\label{app:additional}
+
+\subsection*{Directional connectedness: helix and spiral representations}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{VAR_DY_helix_FROM.png}
+  \caption{Top receivers (FROM) of volatility spillovers in VAR--DY: 3D helix
+  representation. Colours encode average received connectedness.}
+  \label{fig:app_var_from_helix}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{VAR_DY_helix_FROM_spiral.png}
+  \caption{Top receivers (FROM) of volatility spillovers: 2D spiral. Nodes closer
+  to the centre receive more volatility.}
+  \label{fig:app_var_from_spiral}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{VAR_DY_helix_TO.png}
+  \caption{Top emitters (TO) of volatility spillovers: 3D helix representation.}
+  \label{fig:app_var_to_helix}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{VAR_DY_helix_TO_spiral.png}
+  \caption{Top emitters (TO) of volatility spillovers: 2D spiral representation.}
+  \label{fig:app_var_to_spiral}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{VAR_DY_helix_NET.png}
+  \caption{Net spillovers (TO$-$FROM): 3D helix. Positive values = net transmitters.}
+  \label{fig:app_var_net_helix}
+\end{figure}
+
+\subsection*{DCC--GARCH supplementary figures}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{DCC_corr_last_heatmap.png}
+  \caption{DCC--GARCH: conditional correlation matrix $R_t$ for the last observation.}
+  \label{fig:app_dcc_heat}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{DCC_eigen_top10_timeseries.png}
+  \caption{DCC--GARCH: eigenvector centrality over time for the ten most central institutions.}
+  \label{fig:app_dcc_eigen}
+\end{figure}
+
+\subsection*{VAR--DY / DCC comparison: additional plots}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{DY_DCC_levels_reg.png}
+  \caption{VAR--DY TCI and mean absolute DCC correlation over time with OLS fit.}
+  \label{fig:app_dy_dcc_levels}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{DY_DCC_rolling_corr.png}
+  \caption{Rolling correlation (14-point window) between TCI and mean absolute DCC correlation.}
+  \label{fig:app_dy_dcc_rollcorr}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{DY_DCC_xcorr.png}
+  \caption{Cross-correlation function between TCI and mean absolute DCC correlation.
+  Maximum at lag $-1$ indicates DCC slightly leads TCI.}
+  \label{fig:app_dy_dcc_xcorr}
+\end{figure}
+
+\subsection*{Connectedness regimes: $K$ selection}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{regime_silhouette.png}
+  \caption{$K$ selection for connectedness regime clustering. Left: mean silhouette
+  coefficient by $K$ (red marker: selected $K^{*}=2$). Right: within-cluster sum of
+  squares (elbow criterion).}
+  \label{fig:app_regime_sil}
+\end{figure}
+
+\subsection*{Cross-method centrality: top-5 institutions by sub-period}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{top5_strength_by_method_period.png}
+  \caption{Top-5 institutions by strength centrality across methods (VAR--DY, DCC, MST)
+  and sub-periods (pre-COVID, during COVID, post-COVID).}
+  \label{fig:app_top5_methods_periods}
+\end{figure}
+
+\subsection*{Within-country connectedness dynamics}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{tci_clusters_grid.png}
+  \caption{Within-country Total Connectedness Index over time for all represented countries.}
+  \label{fig:app_tci_clusters}
+\end{figure}
+
+% ---------------------------------------------------------------
+% THREE-PERIOD NETWORK ANALYSIS
+% ---------------------------------------------------------------
+\subsection*{Three-period network analysis: Pre-COVID, COVID era, Post-COVID}
+
+The following nine figures present the full bank-level networks across three sub-periods
+(Pre-COVID: 2010--2019; COVID era: 2020--mid-2023; Post-COVID: July 2023--2024)
+and three complementary network representations.
+Node indices refer to the alphabetical mapping in Appendix~\ref{app:node_index}.
+
+\paragraph{VAR--DY directed spillover networks.}
+Node colour encodes the average net spillover over the period
+(red = net emitter, blue = net receiver). Node size is proportional to total strength.
+Only the top 15\,\% of directed edges (by mean GFEVD $\theta$) are shown.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_vardy_pre_covid.png}
+  \caption{VAR--DY directed spillover network, Pre-COVID (2010--2019).}
+  \label{fig:net_vardy_pre}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_vardy_covid.png}
+  \caption{VAR--DY directed spillover network, COVID Era (2020--mid-2023).}
+  \label{fig:net_vardy_covid}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_vardy_post_covid.png}
+  \caption{VAR--DY directed spillover network, Post-COVID (July 2023--2024).}
+  \label{fig:net_vardy_post}
+\end{figure}
+
+\paragraph{Pearson correlation networks.}
+Edges are drawn when $|\rho| \geq 0.50$.
+Node colour encodes the mean absolute correlation with all other institutions
+(dark blue = highly co-moving on average). Node size is proportional to degree.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_corr_pre_covid.png}
+  \caption{Pearson correlation network, Pre-COVID (2010--2019).}
+  \label{fig:net_corr_pre}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_corr_covid.png}
+  \caption{Pearson correlation network, COVID Era (2020--mid-2023).}
+  \label{fig:net_corr_covid}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_corr_post_covid.png}
+
+
+  \caption{Pearson correlation network, Post-COVID (July 2023--2024).}
+  \label{fig:net_corr_post}
+\end{figure}
+
+\paragraph{Minimum Spanning Tree networks.}
+Constructed via Kruskal's algorithm on Mantegna distances $d_{ij} = \sqrt{2(1-\rho_{ij})}$.
+Node colour encodes MST degree (dark teal = hub, light = leaf node).
+Node size is proportional to MST degree.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_mst_pre_covid.png}
+  \caption{Minimum Spanning Tree, Pre-COVID (2010--2019). BNP.PA and UBSG.SW emerge as structural hubs.}
+  \label{fig:net_mst_pre}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_mst_covid.png}
+  \caption{Minimum Spanning Tree, COVID Era (2020--mid-2023). BNP.PA and ACA.PA dominate the spanning tree.}
+  \label{fig:net_mst_covid}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{network_mst_post_covid.png}
+  \caption{Minimum Spanning Tree, Post-COVID (July 2023--2024).}
+  \label{fig:net_mst_post}
+\end{figure}
+
+% ---------------------------------------------------------------
+% APPENDIX E: NETWORK NODE INDEX
+% ---------------------------------------------------------------
+\section{Network Node Index}\label{app:node_index}
+
+The three-period network figures (Appendix~\ref{app:additional}) label each institution with a sequential integer (alphabetical order). The correspondence is given below.
+
+\vspace{4pt}
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{rl|rl|rl}
+\hline
+\# & Ticker & \# & Ticker & \# & Ticker \\
+\hline
+ 1 & A5G.IR     & 22 & DANSKE.CO  & 43 & NDA-SE.ST \\
+ 2 & ACA.PA     & 23 & DBK.DE     & 44 & NONG.OL   \\
+ 3 & ALR.WA     & 24 & DNB.OL     & 45 & NWG.L     \\
+ 4 & BAER.SW    & 25 & EBS.VI     & 46 & PEO.WA    \\
+ 5 & BAMI.MI    & 26 & EFGN.SW    & 47 & PKO.WA    \\
+ 6 & BARC.L     & 27 & ETE.AT     & 48 & PTSB.IR   \\
+ 7 & BBVA.MC    & 28 & EUROB.AT   & 49 & RBI.VI    \\
+ 8 & BCGE.SW    & 29 & GLE.PA     & 50 & SAB.MC    \\
+ 9 & BCP.LS     & 30 & HSBA.L     & 51 & SAN.MC    \\
+10 & BCVN.SW    & 31 & ING.WA     & 52 & SEB-A.ST  \\
+11 & BIRG.IR    & 32 & INGA.AS    & 53 & SHB-A.ST  \\
+12 & BKT.MC     & 33 & INVP.L     & 54 & SPL.WA    \\
+13 & BMED.MI    & 34 & ISP.MI     & 55 & STAN.L    \\
+14 & BMPS.MI    & 35 & JYSK.CO    & 56 & STB.L     \\
+15 & BNP.PA     & 36 & KBC.BR     & 57 & SWED-A.ST \\
+16 & BPE.MI     & 37 & KOMB.PR    & 58 & TLV.RO    \\
+17 & BPSO.MI    & 38 & LLOY.L     & 59 & TPEIR.AT  \\
+18 & BRD.RO     & 39 & MB.MI      & 60 & UBSG.SW   \\
+19 & CABK.MC    & 40 & MBK.WA     & 61 & UCG.MI    \\
+20 & CBG.L      & 41 & MIL.WA     & 62 & VLK.AS    \\
+21 & CBK.DE     & 42 & MING.OL    & 63 & VONN.SW   \\
+\hline
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------------
+% APPENDIX F: SOFTWARE AND REPRODUCIBILITY
+% ---------------------------------------------------------------
+%\section{Software, Packages, and Random Seeds}\label{app:software}
+
+%All computations are fully reproducible using the following software environment.
+
+%\noindent\textbf{\textsf{R} packages:}
+%\begin{itemize}
+%  \item \texttt{ConnectednessApproach} --- VAR--DY connectedness estimation
+%  \item \texttt{rmgarch} --- DCC--GARCH joint estimation
+%  \item \texttt{strucchange} --- Bai--Perron structural break tests
+%  \item \texttt{vars} --- VAR utility functions
+%  \item \texttt{readr}, \texttt{dplyr}, \texttt{tidyr}, \texttt{lubridate},
+%        \texttt{zoo}, \texttt{tibble}, \texttt{yaml}
+%\end{itemize}
+
+%\noindent\textbf{Python packages:}
+%\begin{itemize}
+%  \item \texttt{networkx} $\geq 2.8$ --- MST construction (Kruskal's algorithm)
+ % \item \texttt{scipy}, \texttt{pandas}, \texttt{numpy}, \texttt{matplotlib},
+ %       \texttt{pyyaml}
+%\end{itemize}
+
+%\noindent\textbf{Random seeds:} Spring layout uses \texttt{seed = 7}. All other procedures are deterministic.
+
+%\noindent\textbf{Pipeline:} All scripts are driven by \texttt{config/project.yml}. Key
+%parameters are logged to \texttt{outputs/var\_dy/mat/} (file: \texttt{parameters\_used.csv})
+%after each run of \texttt{04\_var\_dy\_connectedness.R}.
+
+\end{document}

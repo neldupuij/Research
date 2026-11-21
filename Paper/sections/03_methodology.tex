@@ -1,0 +1,536 @@
+\section{Data and Methodology}\label{sec:data_method}
+
+\subsection{Universe, sample and data sources}
+
+Raw daily data are obtained from Yahoo Finance over the period 2010-01-05 to
+2026-03-30. The initial universe comprises 78 equity tickers spanning 20 European
+countries, drawn from benchmark indices (EURO STOXX Banks, STOXX Europe 600 Financials)
+supplemented with major national institutions. We apply a set of filters to construct a balanced weekly panel. An institution~$i$ is
+retained if (i)~its price series starts before a minimum calendar date (configured as
+\texttt{min\_start = 2010-01-01}), (ii)~the weekly series obtained after preprocessing
+contains at least $\texttt{min\_obs} = 252$ observations, (iii)~the fraction of missing
+weekly observations does not exceed $\texttt{drop\_na\_ratio\_max} = 0.20$, and
+(iv)~the stock is not subject to prolonged suspensions or structural breaks (such as
+delisting) within the estimation period.%
+\footnote{The parameter \texttt{remove\_late = TRUE} ensures that late entrants are
+dropped rather than padded, and \texttt{keep\_min\_symbols = 3} prevents countries with
+fewer than three surviving institutions from entering the analysis.}
+Three tickers were excluded due to data quality issues (SVEG.OL, VMUK.L, TRIO.AS), and
+two were unavailable from the data provider at retrieval time (BOV.MT, SYDB.CO). After
+all filters are applied, the final panel retains 63 institutions from 18 countries,
+observed over 682 weekly dates (December 2012 -- March 2026 after the first valid
+return is computed). Survivorship bias is partially mitigated by including institutions
+that were subsequently acquired or delisted within the sample period, provided they
+satisfy the inclusion criteria above. The full list of institutions is provided in
+Appendix~\ref{app:sample}, and their descriptive return statistics are reported in
+Appendix~\ref{app:sumstats}.
+
+Table~\ref{tab:panel_summary} summarises the cross-sectional distribution of return
+properties. The average weekly standard deviation of 4.50\% reflects the high intrinsic
+volatility of European financial equities. Returns are, on average, negatively skewed
+($-0.83$) and exhibit pronounced excess kurtosis ($8.39$), consistent with fat-tailed
+distributions driven by crisis episodes. The cross-sectional range of standard deviations
+(1.42\%--11.92\%) highlights the heterogeneity between stable cantonal banks and highly
+volatile peripheral institutions.
+
+\input{outputs_overleaf/tab_summary_panel.tex}
+
+For each institution $i \in \{1,\dots,N\}$ and trading day $\tau$, we collect adjusted
+closing prices $P_{i,\tau}$ and, when available, high--low--open--close (HLOC) prices
+$(O_{i,\tau}, H_{i,\tau}, L_{i,\tau}, C_{i,\tau})$. The raw series are checked for
+missing observations and obvious outliers; when necessary, isolated missing values are
+linearly interpolated or removed, and corporate actions (splits, large dividends) are
+controlled for when not already embedded in adjusted prices. Daily trading days are then
+aligned across institutions and aggregated to a common weekly calendar, so that the final
+time index $t = 1,\dots,T$ refers to consecutive weeks between $\tau_0$ and $\tau_1$
+(2010--2026 in our application). All institutions are therefore observed on the same set
+of weekly dates, which avoids spurious jumps in co-movement arising from asynchronous
+trading or late entries.
+
+\subsection{Returns and volatility construction}
+
+For each institution $i$ and trading day $\tau$, we define the daily log-return based on
+adjusted closing prices as
+\begin{equation}
+  r_{i,\tau}
+  = \log P_{i,\tau} - \log P_{i,\tau-1},
+  \qquad i = 1,\dots,N,\quad \tau = 2,\dots,T^d.
+\end{equation}
+Weekly returns are constructed by taking the Friday-to-Friday log-difference (or the last
+trading day of each week). These weekly log-returns constitute the input series used to
+estimate connectedness.
+
+Unlike studies that rely on range-based (Parkinson) or realized-volatility estimators, we
+deliberately do \emph{not} compute volatility proxies from high--low or intraday data.
+Following standard practice in VAR-based spillover analysis, we model the dynamics of
+weekly returns directly: when placed inside a rolling VAR, their conditional second
+moments serve as volatility proxies and allow us to capture the propagation of
+uncertainty across institutions.
+
+Let $\mathbf{r}_t = (r_{1,t},\dots,r_{N,t})'$ denote the vector of weekly returns. For
+numerical stability and comparability across institutions, each series is standardized to
+have zero mean and unit variance over the sample:
+\[
+  y_{i,t} = \frac{r_{i,t} - \bar{r}_i}{s_i},
+\]
+where $\bar{r}_i$ and $s_i$ denote the sample mean and standard deviation of institution
+$i$. The VAR--DY connectedness measures are computed on the standardized return vector
+$\mathbf{y}_t = (y_{1,t},\dots,y_{N,t})'$.
+
+\subsection{\texorpdfstring{VAR($p$)}{VAR(p)} specification and generalized FEVD}\label{subsec:var_gfevd}
+
+The connectedness measures are derived from a vector autoregression of order $p$ for the
+standardized weekly return vector $\mathbf{y}_t$, which we interpret as a return-based
+volatility proxy.
+
+Formally, on a probability space $(\Omega,\mathcal{F},\mathbb{P})$ with filtration
+$(\mathcal{F}_t)_{t\geq 0}$ generated by $\{\mathbf{y}_s : s \le t\}$, we assume that
+\begin{equation}
+  \mathbf{y}_t
+  = \sum_{k=1}^p A_k \mathbf{y}_{t-k} + \boldsymbol{\varepsilon}_t,
+  \qquad t = p+1,\dots,T,
+  \label{eq:varp}
+\end{equation}
+where $A_k$ are $N \times N$ coefficient matrices and $\boldsymbol{\varepsilon}_t$ is an
+$N$-dimensional innovation process satisfying
+\begin{align}
+  \mathbb{E}[\boldsymbol{\varepsilon}_t \mid \mathcal{F}_{t-1}] &= \mathbf{0}, \\
+  \mathbb{E}[\boldsymbol{\varepsilon}_t \boldsymbol{\varepsilon}_t' \mid \mathcal{F}_{t-1}] &= \Sigma, \\
+  \mathbb{E}[\boldsymbol{\varepsilon}_t \boldsymbol{\varepsilon}_s'] &= \mathbf{0}
+    \quad \text{for } t \neq s,
+\end{align}
+with $\Sigma$ a positive-definite $N \times N$ covariance matrix. In other words,
+$\{\boldsymbol{\varepsilon}_t\}$ is a zero-mean, covariance-stationary weekly white-noise
+process with finite second moments. For likelihood-based inference one may additionally
+assume conditional normality, $\boldsymbol{\varepsilon}_t \mid \mathcal{F}_{t-1} \sim
+\mathcal{N}(0,\Sigma)$, but the GFEVD-based connectedness measures do not require
+Gaussianity.
+
+In the empirical implementation we set $p = 1$. Lag order selection evaluates AIC and BIC
+over $p \in \{1,\dots,8\}$ on the full standardized returns panel; both criteria
+consistently select $p = 1$. Fixing $p = 1$ also improves numerical stability in rolling
+estimation.%
+\footnote{Replicating the analysis with $p = 2$ yields virtually identical TCI dynamics
+and institutional rankings.}
+The lag order satisfies the stability requirement that the eigenvalues of the companion
+matrix lie strictly inside the unit circle. Under this stability condition, the VAR admits a
+moving-average representation
+\begin{equation}
+  \mathbf{y}_t = \sum_{h=0}^{\infty} \Phi_h \boldsymbol{\varepsilon}_{t-h},
+  \qquad \Phi_0 = I_N,
+\end{equation}
+with $\Phi_h$ obtained recursively from the $\{A_k\}_{k=1}^p$.
+
+Following \citet{DieboldYilmaz2012}, we employ the Generalized Forecast Error Variance
+Decomposition (GFEVD) of \citet{KoopPesaranShin1996} and \citet{PesaranShin1998}, which
+is invariant to the ordering of variables. Let $\sigma_{jj}$ denote the $j$th diagonal
+element of $\Sigma$ and $\mathbf{e}_j$ the $j$th column of the $N \times N$ identity
+matrix. The $H$-step-ahead generalized variance share from variable $j$ to variable $i$
+is defined as
+\begin{equation}
+  \theta_{ij}^{g}(H)
+  = \frac{
+      \sigma_{jj}^{-1}
+      \sum_{h=0}^{H-1}
+      \left( \mathbf{e}_i' \Phi_h \Sigma \mathbf{e}_j \right)^2
+    }{
+      \sum_{h=0}^{H-1}
+      \left( \mathbf{e}_i' \Phi_h \Sigma \Phi_h' \mathbf{e}_i \right)
+    },
+  \qquad i,j = 1,\dots,N.
+\end{equation}
+Because the generalized shares for a given $i$ do not necessarily sum to one across $j$,
+we normalize row-wise:
+\begin{equation}
+  \tilde{\theta}_{ij}^{g}(H)
+  = \frac{\theta_{ij}^{g}(H)}
+         {\sum_{j=1}^N \theta_{ij}^{g}(H)},
+  \qquad \sum_{j=1}^N \tilde{\theta}_{ij}^{g}(H) = 1.
+\end{equation}
+The normalized GFEVD matrix at horizon $H$ is denoted
+\[
+  \tilde{\Theta}^g(H)
+  = \big[ \tilde{\theta}_{ij}^{g}(H) \big]_{i,j=1}^N.
+\]
+
+\noindent\textit{Interpretation caveat.} GFEVD-based connectedness measures predictive
+co-movement, defined as the share of $H$-step-ahead forecast error variance of institution $i$
+attributable to shocks in institution $j$, and does not identify structural causal
+relationships. The directionality in FROM/TO spillovers reflects Granger-causal
+predictability, subject to the usual omitted-variable and model-specification caveats
+inherent in reduced-form VAR analysis.
+
+\subsection{Connectedness measures and rolling windows}\label{subsec:rolling}
+
+From $\tilde{\Theta}^g(H)$ we construct the standard Diebold--Yilmaz connectedness
+indices. The Total Connectedness Index (TCI) is defined as
+\begin{equation}
+  \mathrm{TCI}(H)
+  = \frac{1}{N}
+    \sum_{i=1}^N \sum_{\substack{j=1 \\ j \neq i}}^N
+    \tilde{\theta}_{ij}^g(H),
+\end{equation}
+which is the average share of forecast error variance arising from cross-variable shocks
+rather than own shocks.
+
+Directional connectedness \emph{from} all others \emph{to} institution $i$ is
+\begin{equation}
+  C_{i \leftarrow \bullet}(H)
+  = \sum_{\substack{j=1 \\ j \neq i}}^N \tilde{\theta}_{ij}^g(H),
+\end{equation}
+while directional connectedness \emph{to} all others \emph{from} $i$ is
+\begin{equation}
+  C_{i \rightarrow \bullet}(H)
+  = \sum_{\substack{j=1 \\ j \neq i}}^N \tilde{\theta}_{ji}^g(H).
+\end{equation}
+The net spillover of institution $i$ to the system is then
+\begin{equation}
+  C_i^{\text{net}}(H)
+  = C_{i \rightarrow \bullet}(H) - C_{i \leftarrow \bullet}(H).
+\end{equation}
+
+To capture time variation in spillovers, we estimate the VAR model~\eqref{eq:varp} on
+rolling windows of fixed length $W$ weekly observations. In the baseline configuration we
+set $W = 156$ weeks (approximately three years of data), consistent with \citet{DieboldYilmaz2014}
+and prior rolling-VAR connectedness studies; this window length provides sufficient
+observations for reliable GFEVD estimation while preserving meaningful time variation.%
+\footnote{Robustness to alternative window sizes $W \in \{104, 208\}$ weeks is reported
+in Section~\ref{sec:results}; TCI dynamics and institutional rankings are preserved.}
+The rolling step is four weeks between consecutive windows.%
+\footnote{In practice, connectedness is computed at every weekly observation and then
+reported at four-week intervals to reduce output volume; results are numerically identical
+to directly stepping by four weeks.}
+Let the first window cover $t = 1,\dots,W$, the second window $t = 1+4,\dots,W+4$, and
+so on, up to the last window ending at $T$. This yields $W^\ast$ overlapping windows
+indexed by $w = 1,\dots,W^\ast$. For each window $w$ we estimate the VAR, compute the
+normalized GFEVD matrix $\tilde{\Theta}^g_w(H)$ at forecast horizon $H = 10$ weeks (the
+horizon over which the generalized forecast error variance is decomposed; following
+\citet{DieboldYilmaz2012}, results are robust to alternative choices $H \in \{4,6,12\}$),
+and obtain the corresponding connectedness measures
+\[
+  \mathrm{TCI}_w,\quad
+  C_{i \leftarrow \bullet, w},\quad
+  C_{i \rightarrow \bullet, w},\quad
+  C_{i,w}^{\text{net}},\qquad i = 1,\dots,N.
+\]
+These rolling-window indices form time series that summarize the evolution of system-wide
+and institution-specific spillovers and serve as inputs to the clustering and comparison
+analyses.
+
+\subsection{DCC--GARCH benchmark}\label{subsec:dcc}
+
+As a covariance-based benchmark, we estimate a multivariate DCC--GARCH model on rolling
+windows of the weekly return vector $\mathbf{r}_t$. For each rolling window, returns are
+standardized using the window-specific mean and standard deviation before DCC--GARCH
+estimation, consistent with standard practice for rolling GARCH models (preventing
+look-ahead bias from full-sample moments). The DCC model is specified as follows.
+
+Each return series is modeled by a univariate GARCH(1,1):
+\begin{equation}
+  r_{i,t} = \mu_i + \varepsilon_{i,t}, \qquad
+  \varepsilon_{i,t} = h_{i,t}^{1/2} z_{i,t},
+\end{equation}
+with conditional variance dynamics
+\begin{equation}
+  h_{i,t}
+  = \omega_i + \alpha_i \varepsilon_{i,t-1}^2 + \beta_i h_{i,t-1},
+  \qquad \omega_i > 0,\ \alpha_i,\beta_i \ge 0,\ \alpha_i + \beta_i < 1,
+\end{equation}
+and standardized innovations $z_{i,t}$ such that
+\[
+  \mathbb{E}[z_{i,t} \mid \mathcal{F}_{t-1}] = 0, \qquad
+  \mathbb{E}[z_{i,t}^2 \mid \mathcal{F}_{t-1}] = 1,
+\]
+assumed conditionally i.i.d.\ Normal (with Student-$t$ as fallback when Normal
+initialization fails to converge). Collecting conditional standard deviations in
+\[
+  D_t = \mathrm{diag}\big(h_{1,t}^{1/2},\dots,h_{N,t}^{1/2}\big),
+\]
+we write the conditional covariance matrix as
+\begin{equation}
+  H_t = D_t R_t D_t,
+\end{equation}
+where $R_t$ is the $N \times N$ conditional correlation matrix.
+
+DCC dynamics \citep{Engle2002DCC} specify an auxiliary process $Q_t$ as
+\begin{equation}
+  Q_t = (1 - a - b)\bar{Q} + a (z_{t-1} z_{t-1}') + b Q_{t-1},
+\end{equation}
+where $z_t = D_t^{-1} \boldsymbol{\varepsilon}_t$ is the vector of standardized
+residuals, $\bar{Q}$ is the unconditional covariance matrix of $z_t$, and $a,b \ge 0$
+satisfy $a + b < 1$ to ensure stationarity. The correlation matrix is obtained by
+rescaling:
+\begin{equation}
+  R_t = \mathrm{diag}(Q_t)^{-1/2} Q_t \,\mathrm{diag}(Q_t)^{-1/2}.
+\end{equation}
+Compared with BEKK-type specifications \citep{EngleKroner1995}, DCC introduces only two
+additional scalar parameters $(a,b)$, independent of $N$, which is crucial in a
+high-dimensional setting with rolling estimation.
+
+GARCH and DCC parameters are jointly estimated using the \texttt{rmgarch} package in
+\textsf{R}. When the default solver fails to converge, the estimation routine
+sequentially tries alternative solver configurations (\texttt{solnp}, \texttt{nlminb},
+hybrid combinations) and, if necessary, switches the distributional assumption from
+Normal to Student-$t$. Windows for which all solver combinations fail to converge are
+excluded from the comparison analysis.
+
+For the comparison with VAR--DY connectedness, we align the DCC output with the VAR
+windows by computing, for each window $w$, the mean absolute off-diagonal correlation
+from $\{R_t\}$ over the same calendar weeks used in the VAR estimation window. This
+yields a sequence $\{\overline{\rho}_w\}_{w=1}^{W^\ast}$ that can be directly compared
+to $\{\mathrm{TCI}_w\}$.
+
+\subsection{Correlation-based networks and minimum spanning trees}\label{subsec:mst}
+
+To obtain a purely statistical, model-free view of dependence, we construct
+correlation-based networks and extract their backbone topology through minimum spanning
+trees (MSTs) in the spirit of \citet{Mantegna1999,MartiEtAl2020}. In the baseline
+analysis we focus on a full-sample MST as a summary of long-run dependence; in principle,
+the same construction could be repeated on rolling windows to study how the topology
+evolves over time. For a given sample, we first estimate the $N \times N$ correlation
+matrix of returns
+\begin{equation}
+  \hat{\rho}_{ij}
+  = \frac{
+      \sum_{t=1}^{T^\star} (r_{i,t} - \bar{r}_i)(r_{j,t} - \bar{r}_j)
+    }{
+      \sqrt{\sum_{t=1}^{T^\star} (r_{i,t} - \bar{r}_i)^2}
+      \sqrt{\sum_{t=1}^{T^\star} (r_{j,t} - \bar{r}_j)^2}
+    },
+  \qquad i,j = 1,\dots,N,
+\end{equation}
+where $T^\star$ is the number of observations in the estimation window and $\bar{r}_i$ is
+the sample mean of $r_{i,t}$ on that window. From $\hat{\rho}_{ij}$ we define a
+correlation-based distance
+\begin{equation}
+  d_{ij}
+  = \sqrt{2(1 - \hat{\rho}_{ij})},
+  \qquad d_{ij} \in [0,2],
+\end{equation}
+which satisfies the properties of a metric when $\hat{\rho}$ is positive semidefinite.
+
+The complete weighted graph with nodes $\{1,\dots,N\}$ and edge weights $\{d_{ij}\}$ is
+then reduced to a tree by computing the minimum spanning tree (MST) \citep{Mantegna1999}
+using NetworkX's \texttt{minimum\_spanning\_tree} function, which implements Kruskal's
+algorithm. The MST $\mathcal{T}$ is the connected, acyclic
+subgraph that spans all $N$ nodes and minimizes the total distance
+\begin{equation}
+  \mathcal{T}
+  = \arg\min_{\text{trees } \mathcal{G}}
+    \sum_{(i,j) \in \mathcal{G}} d_{ij}.
+\end{equation}
+By construction, $\mathcal{T}$ contains $N-1$ edges and captures the backbone
+connectivity structure of the dependence network, retaining the strongest pairwise links, by
+discarding the $\binom{N}{2}-(N-1)$ weaker or redundant connections. Importantly, MST
+is a network topology tool, not a statistical filter: it does not test or correct for
+the significance of individual correlations, but rather extracts the minimum-weight
+spanning structure of the graph. Correlations are computed with a minimum of 30 valid
+joint observations; pairs below this threshold are excluded from the graph.%
+\footnote{Alternative sparse network representations such as PMFG and TMFG incorporate
+planarity or topological constraints and could be used as robustness checks; we adopt
+MST for its computational tractability and established use in the financial network
+literature \citep{Mantegna1999,MartiEtAl2020}.}
+
+We adopt MST because correlation-based full networks constructed without multiple testing
+correction may exhibit inflated edge density. MST mitigates this concern structurally by
+retaining only $N-1$ edges; VAR--DY connectedness is immune to this issue entirely, as
+it does not rely on individual correlation significance tests. Full correlation networks
+are therefore used for visualization and exploratory analysis only, while inferential
+conclusions draw on MST and VAR--DY.
+
+From $\mathcal{T}$ we compute standard network descriptors (degree, betweenness, clustering
+around hubs) and identify economically interpretable clusters (e.g.\ groups of banks or
+insurers that are tightly linked in the MST).
+
+\subsection{Country-level clustering and community detection}\label{subsec:clustering}
+
+To examine whether national banking systems share similar systemic behaviour, we apply
+community detection to the country-level TCI correlation network. For each country $c$,
+we define within-country connectedness as the average share of forecast error variance
+of institutions in $c$ attributable to shocks from other institutions in the same
+country, computed for each rolling window $w$. The resulting time series
+$\{\mathrm{TCI}_{c,w}\}$ are then summarized into a country-level correlation matrix,
+and a spring-layout network is constructed from the top pairwise correlations.
+
+Community structure in this network is estimated using the Louvain algorithm
+\citep{Blondel2008}, implemented via the \texttt{python-louvain} library with fixed seed
+$= 7$ to ensure reproducibility. The Louvain method maximizes a modularity objective and
+does not require the number of communities $K$ to be specified in advance. This approach
+groups countries that share similar domestic connectedness dynamics over the full sample,
+providing an economically interpretable partition of the European banking landscape into
+geographic community blocks.
+
+\subsection{Connectedness regime identification}\label{subsec:regimes}
+
+While the country-level clustering examines cross-sectional community structure, a
+complementary question is whether the \emph{time-series} of rolling connectedness
+estimates partitions naturally into distinct systemic regimes. To answer this, we apply
+$k$-means clustering to a set of five summary statistics computed from the rolling GFEVD
+outputs for each window $w$:
+
+\begin{enumerate}
+  \item $\mathrm{TCI}_w$:system-wide level of connectedness.
+  \item $\sigma(\mathrm{NET})_w$:cross-sectional standard deviation of net spillovers,
+    capturing the dispersion of institutional roles.
+  \item $\max(\mathrm{NET})_w$:maximum single-institution net spillover,
+    measuring the influence of the dominant transmitter.
+  \item $s_5(\mathrm{TO})_w$:share of total TO connectedness concentrated in the
+    top-5 emitting institutions, a Herfindahl-type concentration index.
+  \item $\gamma(\mathrm{NET})_w$:skewness of the net spillover cross-section,
+    indicating directional asymmetry in the network.
+\end{enumerate}
+
+All five features are standardized to zero mean and unit variance before clustering. The
+optimal number of regimes $K^*$ is selected by maximising the mean silhouette coefficient
+over the range $K \in \{2, 3, 4, 5, 6\}$. Final cluster centres are estimated with
+$k$-means using 100 random restarts (seed $= 42$) to avoid local minima, and regimes are
+labelled in ascending order of mean TCI so that Regime 1 always denotes the lower
+connectedness state.
+
+\subsection{Frequency-domain connectedness}\label{subsec:freq_conn}
+
+Following \citet{BarunikKrehlik2018}, we decompose the aggregate time-domain
+connectedness into frequency-band-specific contributions. The starting point is the
+spectral representation of the VAR moving-average expansion. Define the
+\emph{spectral transfer function}
+\begin{equation}\label{eq:transfer}
+  \Psi(e^{-i\omega})
+  = \sum_{h=0}^{\infty} \Phi_h\, e^{-i\omega h},
+  \qquad \omega \in [-\pi, \pi],
+\end{equation}
+where $\Phi_h$ are the MA coefficient matrices from Section~\ref{subsec:var_gfevd},
+so that $\mathbf{y}_t = \sum_{h=0}^\infty \Phi_h \boldsymbol{\varepsilon}_{t-h}$.
+The spectral density matrix of $\mathbf{y}_t$ is
+\begin{equation}\label{eq:spectral_density}
+  f(\omega)
+  = \frac{1}{2\pi}\,\Psi(e^{-i\omega})\,\Sigma\,\Psi^*(e^{-i\omega}),
+\end{equation}
+where $\Psi^*(e^{-i\omega}) = \overline{\Psi(e^{-i\omega})}^{\!\top}$ denotes the
+conjugate transpose, and $\mathrm{Var}(y_{i,t}) = \int_{-\pi}^{\pi} f_{ii}(\omega)\,d\omega$
+by Parseval's theorem.
+
+The generalized variance share from institution $j$ to institution $i$
+\emph{at frequency} $\omega$ is
+\begin{equation}\label{eq:theta_freq}
+  \theta^g_{ij}(\omega)
+  = \frac{
+      \sigma_{jj}^{-1}\,
+      \bigl|[\Psi(e^{-i\omega})\,\Sigma]_{ij}\bigr|^{2}
+    }{
+      [\Psi(e^{-i\omega})\,\Sigma\,\Psi^*(e^{-i\omega})]_{ii}
+    },
+  \qquad i,j = 1,\dots,N,
+\end{equation}
+the frequency-domain analogue of $\theta^g_{ij}(H)$ in
+Section~\ref{subsec:var_gfevd}: it measures the contribution of institution~$j$'s
+innovations to the spectral power of institution~$i$'s forecast error at cycle
+length $2\pi/\omega$, normalized by the total spectral power of $i$ at that frequency.
+
+For a frequency band $d = [\omega_1,\omega_2]\subseteq[-\pi,\pi]$, the band-specific
+generalized variance share is obtained by integrating the frequency-specific
+contributions weighted by the spectral power of institution~$i$:
+\begin{equation}\label{eq:theta_band}
+  \theta^g_{ij}(d)
+  = \frac{
+      \displaystyle\int_{d}
+        \sigma_{jj}^{-1}\,
+        \bigl|[\Psi(e^{-i\omega})\,\Sigma]_{ij}\bigr|^{2}
+      \,d\omega
+    }{
+      \displaystyle\int_{-\pi}^{\pi}
+        [\Psi(e^{-i\omega})\,\Sigma\,\Psi^*(e^{-i\omega})]_{ii}
+      \,d\omega
+    }.
+\end{equation}
+Equation~\eqref{eq:theta_band} follows from substituting~\eqref{eq:theta_freq} into
+$\int_d \theta^g_{ij}(\omega)\,f_{ii}(\omega)\,d\omega / \mathrm{Var}(y_{i,t})$;
+the spectral density factor $[\Psi\Sigma\Psi^*]_{ii}$ cancels in the numerator.
+As in Section~\ref{subsec:var_gfevd}, shares are row-normalized:
+\begin{equation}\label{eq:theta_band_norm}
+  \tilde\theta^g_{ij}(d)
+  = \frac{\theta^g_{ij}(d)}{\displaystyle\sum_{j=1}^{N}\theta^g_{ij}([-\pi,\pi])},
+  \qquad
+  \sum_{j=1}^{N}\tilde\theta^g_{ij}([-\pi,\pi]) = 1,
+\end{equation}
+and the band-specific Total Connectedness Index is
+\begin{equation}\label{eq:tci_band}
+  \mathrm{TCI}(d)
+  = \frac{1}{N}
+    \sum_{i=1}^{N}\sum_{\substack{j=1\\j\neq i}}^{N}
+    \tilde\theta^g_{ij}(d).
+\end{equation}
+By construction, $\mathrm{TCI}(d_S) + \mathrm{TCI}(d_M) + \mathrm{TCI}(d_L) =
+\mathrm{TCI}(H)$ in the large-$H$ limit, so the decomposition is exhaustive and
+without residual.
+
+We consider three economically motivated bands for weekly data:
+\begin{itemize}
+  \item \textbf{Short-run} ($d_S = [\pi/2,\,\pi]$, cycles of 2--4 weeks): captures
+    fast-moving transmission typical of market stress and contagion episodes.
+  \item \textbf{Medium-run} ($d_M = [\pi/4,\,\pi/2]$, cycles of 4--8 weeks): captures
+    adjustment dynamics following initial shocks.
+  \item \textbf{Long-run} ($d_L = [0,\pi/4]$, cycles\,$>\,$8 weeks): captures structural
+    co-movement driven by common business-cycle and macroprudential exposures.
+\end{itemize}
+For each rolling window~$w$,
+equations~\eqref{eq:transfer}--\eqref{eq:tci_band} are evaluated with the
+window-specific estimates $(\Phi_{h,w}, \Sigma_w)$, yielding time-varying band-specific
+TCI series $\{\mathrm{TCI}_w(d)\}_{d\in\{d_S,\,d_M,\,d_L\}}$. This decomposition
+allows us to distinguish transient contagion (short-run spikes) from durable structural
+integration (long-run shifts), directly addressing the question of whether COVID-19
+constituted a temporary panic episode or a permanent restructuring of systemic linkages.
+Frequency connectedness is computed using the \texttt{FrequencyConnectedness} function
+in the \texttt{ConnectednessApproach} \textsf{R} package, with spectral resolution
+\texttt{nfore}~$= 200$.
+
+\subsection{Structural break analysis}\label{subsec:breaks}
+
+To formally test whether the TCI series contains statistically significant breaks, rather than treating COVID-19 merely as an ex post event label, we apply the
+Bai--Perron (2003) multiple-break estimation procedure and a Chow test targeted at the
+pandemic onset. The Bai--Perron procedure is implemented using the \texttt{breakpoints}
+function from the \texttt{strucchange} package in \textsf{R}, with minimum segment
+length $h = 0.10$ (i.e.\ each regime must cover at least 10\% of the sample) and a
+maximum of $K = 5$ break points. The Chow test uses 2020-03-02 as the target date,
+corresponding to the week in which the COVID-19 shock first caused a marked and
+sustained disruption to European financial markets.
+
+\subsection{Network representation, portfolio design and implementation
+details}\label{subsec:implementation}
+
+For each window $w$, the normalized GFEVD matrix $\tilde{\Theta}^g_w(H)$ is interpreted
+as the weighted adjacency matrix of a directed volatility-spillover network. Node $i$
+corresponds to institution $i$, and the weight on the edge $i \rightarrow j$ is defined
+as
+\[
+  w_{ij,w} = \tilde{\theta}_{ji,w}^g(H),
+\]
+i.e.\ the share of institution $j$'s forecast error variance attributable to shocks in
+institution $i$. From this network we compute standard centrality measures (out-strength,
+in-strength, eigenvector centrality, PageRank), which serve as institution-level
+indicators of systemic importance and are analyzed both in levels and across clustered
+regimes.
+
+In parallel, the full-sample MST $\mathcal{T}$ derived from the correlation matrix
+$\hat{\rho}_{ij}$ provides a sparse, undirected dependence network. Cluster structure in
+$\mathcal{T}$ (e.g.\ communities obtained by cutting long edges or applying hierarchical
+clustering on $d_{ij}$) is used to group institutions into diversified blocks. In
+principle, simple portfolio rules can be constructed that (i)~overweight
+low-connectedness or net-receiver institutions (based on $C_{i,w}^{\text{net}}$), and
+(ii)~allocate capital according to correlation/MST-based clustering, in the spirit of
+hierarchy- and network-based allocation schemes surveyed by \citet{MartiEtAl2020}. We
+outline this link between network structure and portfolio design as a natural application
+of the framework; implementing and backtesting such strategies in detail is left for
+future work.
+
+In practice, VAR estimation and GFEVD computation are implemented in \textsf{R} using
+standard connectedness routines, while clustering, MST computation, and portfolio
+experiments are implemented in \textsf{Python}. Hyperparameters such as VAR order $p$,
+forecast horizon $H$, window length $W$, number of clusters $K$, and the choice of
+rolling window for correlation estimation are treated as tuning parameters: they are
+chosen based on information criteria, sensitivity analysis, and economic
+interpretability, and their final values are reported in the empirical section together
+with robustness checks.
+
+All empirical steps, from data preprocessing and weekly aggregation to VAR--DY
+estimation, DCC--GARCH modelling, and network construction, are implemented in a
+reproducible \textsf{R}/\textsf{Python} pipeline.

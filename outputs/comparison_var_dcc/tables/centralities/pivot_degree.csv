@@ -1,0 +1,13 @@
+period,,during_covid,during_covid,during_covid,post_covid,post_covid,post_covid,pre_covid,pre_covid,pre_covid
+method,,dcc,mst,var_dy,dcc,mst,var_dy,dcc,mst,var_dy
+ticker,cluster,,,,,,,,,
+ACA.PA,FR,6.0,6.0,4.0,4.0,2.0,3.0,4.0,2.0,3.0
+BARC.L,UK,3.0,1.0,0.0,0.0,1.0,1.0,0.0,1.0,0.0
+BBVA.MC,ES,1.0,1.0,1.0,1.0,1.0,1.0,3.0,1.0,2.0
+BNP.PA,FR,5.0,3.0,2.0,6.0,4.0,5.0,5.0,4.0,6.0
+CABK.MC,ES,0.0,1.0,1.0,0.0,1.0,0.0,2.0,1.0,1.0
+GLE.PA,FR,3.0,1.0,2.0,4.0,1.0,3.0,3.0,1.0,3.0
+INGA.AS,NL,4.0,1.0,2.0,4.0,2.0,2.0,4.0,3.0,2.0
+ISP.MI,IT,3.0,1.0,1.0,5.0,2.0,1.0,0.0,1.0,1.0
+SAN.MC,ES,3.0,2.0,3.0,3.0,3.0,2.0,6.0,3.0,2.0
+UBSG.SW,CH,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0
